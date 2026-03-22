@@ -1,23 +1,35 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import Registration from './components/Auth';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loaing, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loaing) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!user) {
+    return <Registration />
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          My first React project for brother's dissertation!
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Добро пожаловать, {user.email}!</h1>
+      <p>Скоро здесь появится карта</p>
     </div>
   );
 }
