@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import Registration from './components/Auth';
+import Map from './components/Map';
+import MapComponent from './components/Map';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -29,7 +31,7 @@ function App() {
   return (
     <div>
       <h1>Добро пожаловать, {user.email}!</h1>
-      <p>Скоро здесь появится карта</p>
+      <Map/>
     </div>
   );
 }
