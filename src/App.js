@@ -1,19 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import Registration from './components/Auth';
+import Auth from './components/Auth';
 import Map from './components/Map';
-import MapComponent from './components/Map';
+import { doc, getDoc } from 'firebase/firestore';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loaing, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, "Users", currentUser.uid));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          }
+        } catch (error) {
+          console.error("Ошибка загрузки данных пользователя:", error);
+        }
+      }
       setLoading(false);
     });
 
@@ -25,12 +35,12 @@ function App() {
   }
 
   if (!user) {
-    return <Registration />
+    return <Auth />
   }
 
   return (
     <div>
-      <h1>Добро пожаловать, {user.email}!</h1>
+      <h1>Добро пожаловать, {userData.firstName} {userData.lastName}!</h1>
       <Map/>
     </div>
   );
