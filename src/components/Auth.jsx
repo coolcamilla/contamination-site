@@ -1,61 +1,39 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, getAuth } from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../firebase";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
-function Registration() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+function Auth() {
+    const [isLogin, setIsLogin] = useState(true);
 
-    const handleSignUp = async (e) => {
-        e.preventDefault();
-        try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            console.log("Sign Up done");
-            setError('');
-        }
-        catch(error) {
-            console.log(error.code);
-            setError(error.message);
-        }
-    }
-
-    const handleLogIn = async (e) => {
-        e.preventDefault();
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            console.log("Log In done");
-            setError('');
-        }
-        catch(error) {
-            console.log(error.code);
-            setError(error.message);
-        }
+    const toggleMode = () => {
+        setIsLogin(!isLogin);
     }
 
     return (
-        <div>
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            <form onSubmit={handleLogIn}>
-                <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Введите почту"
-                required
-                />
-                <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Введите пароль"
-                required
-                />
-                <button type="submit">Войти</button>
-            </form>
-            <button onClick={handleSignUp}>Зарегестрироваться</button>
+        <div className="auth-container">
+            <div className="auth-card">
+                {isLogin ? <SignIn /> : <SignUp />}
+
+                <div className="auth-toggle">
+                    {isLogin ? (
+                        <p>
+                            Нет аккаунта?{" "}
+                            <button type="button" onClick={toggleMode}>
+                                Зарегистрироваться
+                            </button>
+                        </p>
+                    ) : (
+                        <p>
+                            Уже есть аккаунт?{" "}
+                            <button type="button" onClick={toggleMode}>
+                                Войти
+                            </button>
+                        </p>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
 
-export default Registration;
+export default Auth;
