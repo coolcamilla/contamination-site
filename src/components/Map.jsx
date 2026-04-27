@@ -1,6 +1,4 @@
-import { MapContainer } from 'react-leaflet/MapContainer';
-import { TileLayer } from 'react-leaflet/TileLayer';
-import { useMap } from 'react-leaflet/hooks';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { Marker } from 'react-leaflet/Marker';
 import { useState } from "react";
 import { useEffect } from 'react';

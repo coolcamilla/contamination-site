@@ -5,7 +5,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { DISTRICTS } from "../constants/districts";
 
-function SignUp() {
+function SignUp({onSuccess}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -15,18 +15,13 @@ function SignUp() {
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-            // 1. Создаём пользователя
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            
-            console.log("Пользователь создан:", user.uid);
-            
+
             await updateProfile(user, {
                 displayName: `${firstName} ${lastName}`
             });
-            
-            console.log("Профиль обновлён");
-            
+
             await setDoc(doc(db, "Users", user.uid), {
                 uid: user.uid,
                 email: user.email,
@@ -38,21 +33,38 @@ function SignUp() {
                 role: "user",
                 createdAt: new Date(),
             });
-            
-            console.log("Данные сохранены в Firestore");
+
             toast.success("Регистрация успешна!", {
                 position: "top-center",
             });
-            
+
             setEmail("");
             setPassword("");
             setFirstName("");
             setLastName("");
-            
+
+            if (onSuccess) {
+                onSuccess();
+            }
+
         } catch (error) {
-            console.log("Ошибка регистрации:", error.code, error.message);
-            toast.error(error.message, {
-                position: "bottom-center",
+            let errorMessage = "Не удалось зарегистрироваться";
+            
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = "Этот email уже зарегистрирован";
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = "Некорректный формат email";
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = "Пароль должен содержать не менее 6 символов";
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = "Ошибка сети. Проверьте подключение к интернету";
+            } else {
+                errorMessage = error.message || "Произошла ошибка при регистрации";
+            }
+            
+            toast.error(errorMessage, {
+                position: "top-center",
+                autoClose: 5000
             });
         }
     };
