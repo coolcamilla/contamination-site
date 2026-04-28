@@ -1,0 +1,203 @@
+.report-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.report-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.report-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #b8d4c4;
+    transition: all 0.2s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.report-modal-close:hover {
+    color: #1a472a;
+    background: #e8f0eb;
+}
+
+.report-modal h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #1a472a;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.report-coords {
+    background: #fafdfb;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'SF Mono', Monaco, monospace;
+    margin-bottom: 28px;
+    text-align: center;
+    color: #5a7a68;
+    border: 2px solid #e8f0eb;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2d5a3d;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.level-selector {
+    display: flex;
+    justify-content: space-around;
+    gap: 12px;
+}
+
+.level-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid #e8f0eb;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafdfb;
+}
+
+.level-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.level-btn.active {
+    border-color: #2d7a4f;
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
+}
+
+.level-text {
+    text-align: center;
+    margin-top: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #d4e6d9;
+    border-radius: 10px;
+    font-family: inherit;
+    resize: vertical;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fafdfb;
+    box-sizing: border-box;
+    min-height: 100px;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: #2d7a4f;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(45, 122, 79, 0.15);
+}
+
+.comment-input::placeholder {
+    color: #b8d4c4;
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 16px;
+    background: #e8f0eb;
+    color: #2d5a3d;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cancel-btn:hover {
+    background: #d4e6d9;
+    transform: translateY(-2px);
+}
+
+.submit-btn {
+    flex: 1;
+    padding: 16px;
+    background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 122, 79, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}

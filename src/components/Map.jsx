@@ -1,9 +1,8 @@
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import { Marker } from 'react-leaflet/Marker';
-import { useState } from "react";
-import { useEffect } from 'react';
+import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { useState, useEffect } from "react";
 import './Map.css';
 import 'leaflet/dist/leaflet.css';
+import ReportForm from './ReportForm';
 
 function MapBound() {
     const map = useMap();
@@ -26,12 +25,39 @@ function MapBound() {
     return null;
 }
 
-function Map() {
-    const center = [56.3269,  44.0075];
+function MapClickHandler({ onClick }) {
+    useMapEvents({
+        click: (e) => {
+            onClick(e);
+        },
+    });
+    return null;
+}
+
+function Map({ user, onRequireAuth }) {
+    const center = [56.3269, 44.0075];
+
+    const [showForm, setShowForm] = useState(false);
+    const [selectedCoords, setSelectedCoords] = useState(null);
 
     const handleMapClick = (e) => {
-        console.log("Клик по координатам", e.latlng);
+        if (!user) {
+            if (onRequireAuth) onRequireAuth();
+            return;
+        }
 
+        console.log("Клик по координатам", e.latlng);
+        setSelectedCoords(e.latlng);
+        setShowForm(true);
+    };
+
+    const handleFormClose = () => {
+        setShowForm(false);
+        setSelectedCoords(null);
+    }
+
+    const handleFormSuccess = () => {
+        console.log("Отметка добавлена, можно обновить карту");
     };
 
     return (
@@ -43,12 +69,22 @@ function Map() {
                 zoomSnap={0.5} 
                 zoomDelta={0.5} 
                 style={{height: '750px', width: '80%'}} 
-                onclick={handleMapClick}
                 className='map'>
-                <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"/>
+                <TileLayer 
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                />
                 <MapBound />
+                <MapClickHandler onClick={handleMapClick} />
             </MapContainer>
+
+            {showForm && selectedCoords && (
+                <ReportForm
+                    coords={selectedCoords}
+                    onClose={handleFormClose}
+                    onSuccess={handleFormSuccess}
+                />
+            )} 
         </div>
     );
 }
