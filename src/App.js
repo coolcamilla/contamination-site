@@ -6,7 +6,7 @@ import Auth from './components/Auth';
 import Map from './components/Map';
 import Header from './components/Header';
 import { doc, getDoc } from 'firebase/firestore';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -34,6 +34,14 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const handleRequireAuth = () => {
+    toast.info("Оставлять отметки могут только зарегистрированные пользователи", {
+      position: "top-center",
+      autoClose: 4000,
+    });
+    setShowAuthModal(true);
+  };
+
   if (loading) {
     return <div>Загрузка...</div>;
   }
@@ -53,7 +61,7 @@ function App() {
       )}
 
       <main className='main-content'>
-        <Map/>
+        <Map user={user} onRequireAuth={handleRequireAuth} />
       </main>
 
       {showAuthModal && (
