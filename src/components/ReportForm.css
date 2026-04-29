@@ -201,3 +201,43 @@
     transform: none;
     box-shadow: none;
 }
+
+.upload-photo-btn {
+    width: 100%;
+    padding: 10px;
+    background: #f0f0f0;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-photo-btn:hover {
+    background: #e0e0e0;
+}
+
+.photo-preview {
+    position: relative;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.photo-preview img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+}
+
+.remove-photo-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 16px;
+}
