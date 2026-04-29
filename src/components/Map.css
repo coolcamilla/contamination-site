@@ -16,3 +16,50 @@
 .leaflet-control-attribution a:first-child {
     display: none;
 }
+
+.custom-marker {
+    background: transparent;
+    border: none;
+}
+
+.marker-pin {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+    box-sizing: border-box;
+}
+
+.marker-popup {
+    text-align: center;
+    min-width: 150px;
+    padding: 5px;
+}
+
+.popup-level {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.popup-comment {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.4;
+    word-wrap: break-word;
+    max-width: 200px;
+}
+
+.popup-date {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888;
+}
+
+.leaflet-marker-icon {
+    background: transparent;
+    border: none;
+}
