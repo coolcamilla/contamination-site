@@ -127,9 +127,17 @@ function Map({ user, onRequireAuth }) {
                                     <div className="popup-level" style={{ color: getLevelInfo(report.trashLevel).color }}>
                                         {getLevelInfo(report.trashLevel).text}
                                     </div>
+                                    
+                                    {report.photoUrl && (
+                                        <div className="popup-photo">
+                                            <img src={report.photoUrl} alt="Фото загрязнения" />
+                                        </div>
+                                    )}
+                                    
                                     {report.comment && (
                                         <div className="popup-comment">{report.comment}</div>
                                     )}
+                                    
                                     <div className="popup-date">
                                         {report.createdAt?.toDate 
                                             ? report.createdAt.toDate().toLocaleDateString('ru-RU') 

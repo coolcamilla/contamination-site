@@ -8,6 +8,8 @@ function ReportForm({ coords, onClose, onSuccess }) {
     const [trashLevel, setTrashLevel] = useState(3);
     const [comment, setComment] = useState("");
     const [loading, setLoading] = useState(false);
+    const [photoUrl, setPhotoUrl] = useState("");
+    const [isUploading, setIsUploading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +24,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
                 },
                 trashLevel: trashLevel,
                 comment: comment,
+                photoUrl: photoUrl,
                 createdAt: new Date(),
                 status: "pending"
             });
@@ -36,6 +39,39 @@ function ReportForm({ coords, onClose, onSuccess }) {
         } finally {
             setLoading(false);
         }
+    };
+
+    const showCloudinaryWidget = () => {
+        if (!window.cloudinary) {
+            console.error("Cloudinary widget script not loaded");
+            toast.error("Ошибка загрузки виджета", { position: "bottom-center" });
+            return;
+        }
+
+        setIsUploading(true);
+        const uploadWidget = window.cloudinary.createUploadWidget(
+            {
+                cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME,
+                uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET,
+                sources: ['local', 'camera'],
+                multiple: false,
+                maxFiles: 1,
+                clientAllowedFormats: ["image/jpeg", "image/png", "image/webp"]
+            },
+            (error, result) => {
+                setIsUploading(false);
+                if (error) {
+                    console.error("Upload error:", error);
+                    toast.error("Ошибка загрузки фото", { position: "bottom-center" });
+                    return;
+                }
+                if (result.event === 'success') {
+                    setPhotoUrl(result.info.secure_url);
+                    toast.success("Фото загружено!", { position: "top-center" });
+                }
+            }
+        );
+        uploadWidget.open();
     };
 
     const getLevelInfo = (level) => {
@@ -90,6 +126,32 @@ function ReportForm({ coords, onClose, onSuccess }) {
                             rows="4"
                             className="comment-input"
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Фото</label>
+                        <button
+                            type="button"
+                            onClick={showCloudinaryWidget}
+                            disabled={isUploading}
+                            className="upload-photo-btn"
+                        >
+                            {isUploading ? "Загрузка..." : (photoUrl ? "Изменить фото" : "Выбрать фото")}
+                        </button>
+                        
+                        {photoUrl && (
+                            <div className="photo-preview">
+                                <img src={photoUrl} alt="Загруженное фото" />
+                                <button 
+                                    type="button" 
+                                    className="remove-photo-btn" 
+                                    onClick={() => setPhotoUrl("")}
+                                    title="Удалить фото"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-actions">

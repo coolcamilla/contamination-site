@@ -34,27 +34,42 @@
 
 .marker-popup {
     text-align: center;
-    min-width: 150px;
+    min-width: 180px;
+    max-width: 260px;
     padding: 5px;
 }
 
 .popup-level {
     font-weight: 700;
     font-size: 15px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.popup-photo {
+    margin: 10px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e8f0eb;
+}
+
+.popup-photo img {
+    display: block;
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
 }
 
 .popup-comment {
-    margin-top: 8px;
+    margin-top: 10px;
     font-size: 14px;
     color: #444;
     line-height: 1.4;
     word-wrap: break-word;
-    max-width: 200px;
+    text-align: center;
 }
 
 .popup-date {
-    margin-top: 10px;
+    margin-top: 12px;
     font-size: 12px;
     color: #888;
 }
