@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { toast } from "react-toastify";
 import "./ReportForm.css";
+import { getLevelInfo } from '../constants/levels';
 
 function ReportForm({ coords, onClose, onSuccess }) {
     const [trashLevel, setTrashLevel] = useState(3);
@@ -10,6 +11,58 @@ function ReportForm({ coords, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
     const [photoUrl, setPhotoUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
+    
+    const [address, setAddress] = useState("");
+    const [addressLoading, setAddressLoading] = useState(false);
+
+    const formatAddress = (addressData) => {
+        if (!addressData) return null;
+
+        const streetKeys = ['road', 'street', 'pedestrian', 'avenue', 'square', 'place'];
+        let street = null;
+
+        for (const key of streetKeys) {
+            if (addressData[key]) {
+                street = addressData[key];
+                break;
+            }
+        }
+
+        const houseNumber = addressData.house_number;
+
+        if (street && houseNumber) {
+            return `${street}, ${houseNumber}`;
+        } else if (street) {
+            return street;
+        } else if (houseNumber) {
+            return `д. ${houseNumber}`;
+        }
+
+        return null;
+    };
+
+    useEffect(() => {
+        if (!coords) return;
+
+        const fetchAddress = async () => {
+            setAddressLoading(true);
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coords.lat}&lon=${coords.lng}&accept-language=ru`
+                );
+                const data = await response.json();
+                const shortAddress = formatAddress(data.address);
+                setAddress(shortAddress || data.display_name || "");
+            } catch (err) {
+                console.error("Ошибка геокодирования:", err);
+                setAddress("");
+            } finally {
+                setAddressLoading(false);
+            }
+        };
+
+        fetchAddress();
+    }, [coords]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +75,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
                     lat: coords.lat,
                     lng: coords.lng
                 },
+                address: address || null,
                 trashLevel: trashLevel,
                 comment: comment,
                 photoUrl: photoUrl,
@@ -43,8 +97,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
 
     const showCloudinaryWidget = () => {
         if (!window.cloudinary) {
-            console.error("Cloudinary widget script not loaded");
-            toast.error("Ошибка загрузки виджета", { position: "bottom-center" });
+            toast.error("Ошибка загрузки виджета");
             return;
         }
 
@@ -61,28 +114,16 @@ function ReportForm({ coords, onClose, onSuccess }) {
             (error, result) => {
                 setIsUploading(false);
                 if (error) {
-                    console.error("Upload error:", error);
-                    toast.error("Ошибка загрузки фото", { position: "bottom-center" });
+                    toast.error("Ошибка загрузки фото");
                     return;
                 }
                 if (result.event === 'success') {
                     setPhotoUrl(result.info.secure_url);
-                    toast.success("Фото загружено!", { position: "top-center" });
+                    toast.success("Фото загружено!");
                 }
             }
         );
         uploadWidget.open();
-    };
-
-    const getLevelInfo = (level) => {
-        const levels = {
-            1: { color: "#00ff00", emoji: "😊", text: "Очень чисто" },
-            2: { color: "#88ff00", emoji: "🙂", text: "Чисто" },
-            3: { color: "#ffff00", emoji: "😐", text: "Средне" },
-            4: { color: "#ff8800", emoji: "😟", text: "Грязно" },
-            5: { color: "#ff0000", emoji: "😡", text: "Очень грязно" }
-        };
-        return levels[level];
     };
 
     const levelInfo = getLevelInfo(trashLevel);
@@ -92,8 +133,12 @@ function ReportForm({ coords, onClose, onSuccess }) {
             <div className="report-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="report-modal-close" onClick={onClose}>×</button>
                 <h2>Сообщить о загрязнении</h2>
+                
                 <p className="report-coords">
-                    📍 {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
+                    📍 {addressLoading 
+                        ? "Определение адреса..." 
+                        : (address || `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`)
+                    }
                 </p>
 
                 <form onSubmit={handleSubmit}>
