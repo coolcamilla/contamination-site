@@ -1,0 +1,113 @@
+.report-card-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.report-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 90%;
+    max-width: 340px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    position: relative;
+    pointer-events: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    animation: cardAppear 0.2s ease;
+}
+
+@keyframes cardAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.report-card-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #b8d4c4;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.report-card-close:hover {
+    color: #1a472a;
+    background: #e8f0eb;
+}
+
+.report-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.report-card-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.report-card-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #1a472a;
+}
+
+.report-card-address {
+    font-size: 13px;
+    color: #555;
+    background: #fafdfb;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e8f0eb;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.report-card-photo {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e8f0eb;
+    margin-bottom: 12px;
+}
+
+.report-card-photo img {
+    display: block;
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.report-card-comment {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.report-card-date {
+    font-size: 12px;
+    color: #888;
+    text-align: right;
+}

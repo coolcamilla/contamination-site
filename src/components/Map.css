@@ -32,68 +32,6 @@
     box-sizing: border-box;
 }
 
-/* Попап — компактный, с прокруткой если нужно */
-.marker-popup {
-    text-align: center;
-    max-width: 200px;
-    padding: 4px;
-    font-family: inherit;
-}
-
-.popup-level {
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 8px;
-    line-height: 1.3;
-}
-
-.popup-address {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 8px;
-    line-height: 1.3;
-    text-align: left;
-    background: #fafdfb;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid #e8f0eb;
-    word-break: break-word;
-}
-
-.popup-photo {
-    margin: 8px 0;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e8f0eb;
-}
-
-.popup-photo img {
-    display: block;
-    width: 100%;
-    max-height: 120px;
-    object-fit: cover;
-}
-
-.popup-comment {
-    margin-top: 8px;
-    font-size: 13px;
-    color: #444;
-    line-height: 1.4;
-    word-wrap: break-word;
-    text-align: left;
-}
-
-.popup-date {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #888;
-}
-
-.leaflet-marker-icon {
-    background: transparent;
-    border: none;
-}
-
 .container-marker {
     background: transparent;
     border: none;
@@ -108,4 +46,14 @@
 
 .container-marker:hover .container-emoji {
     opacity: 0.85;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 500 !important;
+}
+
+.leaflet-marker-icon {
+    background: transparent;
+    border: none;
 }
