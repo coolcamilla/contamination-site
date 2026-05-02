@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMap, useMapEvents, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap, useMapEvents, Marker } from 'react-leaflet';
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -7,6 +7,7 @@ import { getLevelInfo } from '../constants/levels';
 import './Map.css';
 import 'leaflet/dist/leaflet.css';
 import ReportForm from './ReportForm';
+import ReportCard from './ReportCard';
 
 const getMarkerIcon = (level) => {
     const info = getLevelInfo(level);
@@ -15,11 +16,9 @@ const getMarkerIcon = (level) => {
         html: `<div class="marker-pin" style="background-color: ${info.color};"></div>`,
         iconSize: [28, 28],
         iconAnchor: [14, 14],
-        popupAnchor: [0, -14],
     });
 }
 
-// Меньше и полупрозрачный
 const containerIcon = L.divIcon({
     className: 'container-marker',
     html: `<span class="container-emoji">🗑️</span>`,
@@ -27,13 +26,11 @@ const containerIcon = L.divIcon({
     iconAnchor: [7, 7],
 });
 
-// Создаём кастомные слои (panes) с нужными z-index
 function MapPanes() {
     const map = useMap();
     useEffect(() => {
         map.createPane('containersPane');
         map.getPane('containersPane').style.zIndex = 400;
-
         map.createPane('reportsPane');
         map.getPane('reportsPane').style.zIndex = 650;
     }, [map]);
@@ -63,6 +60,7 @@ function Map({ user, onRequireAuth }) {
     const [selectedCoords, setSelectedCoords] = useState(null);
     const [reports, setReports] = useState([]);
     const [containers, setContainers] = useState([]);
+    const [selectedReport, setSelectedReport] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "reports"), (snapshot) => {
@@ -82,32 +80,28 @@ function Map({ user, onRequireAuth }) {
                 );
                 out body;
             `;
-            
             try {
                 const response = await fetch('https://overpass-api.de/api/interpreter', {
                     method: 'POST',
                     body: query
                 });
                 const data = await response.json();
-                
                 const containerData = data.elements
                     .filter(el => el.type === 'node')
-                    .map(el => ({
-                        id: el.id,
-                        lat: el.lat,
-                        lng: el.lon,
-                    }));
-                
+                    .map(el => ({ id: el.id, lat: el.lat, lng: el.lon }));
                 setContainers(containerData);
             } catch (err) {
                 console.error("Ошибка загрузки контейнеров:", err);
             }
         };
-
         fetchContainers();
     }, []);
 
     const handleMapClick = (e) => {
+        if (selectedReport) {
+            setSelectedReport(null);
+            return;
+        }
         if (!user) {
             if (onRequireAuth) onRequireAuth();
             return;
@@ -138,7 +132,6 @@ function Map({ user, onRequireAuth }) {
                 <MapBound />
                 <MapClickHandler onClick={handleMapClick} />
 
-                {/* Контейнеры — на нижнем слое, меньше, полупрозрачные */}
                 {containers.map((container) => (
                     <Marker
                         key={`container-${container.id}`}
@@ -148,49 +141,31 @@ function Map({ user, onRequireAuth }) {
                     />
                 ))}
 
-                {/* Репорты — на верхнем слое, поверх контейнеров */}
                 {reports.map((report) => (
                     report.coordinates && (
                         <Marker
                             key={report.id}
                             position={[report.coordinates.lat, report.coordinates.lng]}
                             icon={getMarkerIcon(report.trashLevel)}
-                            pane="reportsPane">
-                            <Popup maxWidth={220} autoPanPadding={[40, 40]} autoPan={true}>
-                                <div className='marker-popup'>
-                                    <div className="popup-level" style={{ color: getLevelInfo(report.trashLevel).color }}>
-                                        {getLevelInfo(report.trashLevel).text}
-                                    </div>
-                                    
-                                    {report.address && (
-                                        <div className="popup-address">📍 {report.address}</div>
-                                    )}
-                                    
-                                    {report.photoUrl && (
-                                        <div className="popup-photo">
-                                            <img src={report.photoUrl} alt="Фото загрязнения" />
-                                        </div>
-                                    )}
-                                    
-                                    {report.comment && (
-                                        <div className="popup-comment">{report.comment}</div>
-                                    )}
-                                    
-                                    <div className="popup-date">
-                                        {report.createdAt?.toDate 
-                                            ? report.createdAt.toDate().toLocaleDateString('ru-RU') 
-                                            : ''}
-                                    </div>
-                                </div>
-                            </Popup>
-                        </Marker>
+                            pane="reportsPane"
+                            eventHandlers={{
+                                click: (e) => {
+                                    e.originalEvent.stopPropagation();
+                                    setSelectedReport(report);
+                                }
+                            }}
+                        />
                     )
                 ))}
             </MapContainer>
 
             {showForm && selectedCoords && (
                 <ReportForm coords={selectedCoords} onClose={handleFormClose} onSuccess={handleFormSuccess} />
-            )} 
+            )}
+
+            {selectedReport && (
+                <ReportCard report={selectedReport} onClose={() => setSelectedReport(null)} />
+            )}
         </div>
     );
 }
