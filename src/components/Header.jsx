@@ -19,7 +19,7 @@ function Header({user, onLoginClick}) {
     return (
         <header className="header">
             <div className="header-logo">
-                <h1>Крутое Название</h1>
+                <h1>ЭКО Патруль</h1>
             </div>
 
             <nav className="header-nav">
