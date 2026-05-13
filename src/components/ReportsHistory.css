@@ -1,0 +1,236 @@
+/* Контейнер */
+.rh-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.rh-title {
+    color: #1a472a;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+/* Состояния */
+.rh-loading,
+.rh-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #5a7a68;
+}
+
+.rh-empty h3 {
+    color: #1a472a;
+    margin-bottom: 8px;
+}
+
+/* Сетка */
+.rh-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Карточка */
+.rh-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 2px solid #e8f0eb;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.rh-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: #b8d4c4;
+}
+
+.rh-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rh-card-number {
+    font-weight: 700;
+    color: #1a472a;
+    font-size: 16px;
+    font-family: monospace;
+}
+
+.rh-card-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.rh-card-address {
+    color: #2d5a3d;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    min-height: 42px;
+}
+
+.rh-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #888;
+}
+
+.rh-card-more {
+    color: #2d7a4f;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* Модалка */
+.rh-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.rh-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: rhModalIn 0.2s ease;
+}
+
+@keyframes rhModalIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.rh-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #b8d4c4;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.rh-modal-close:hover {
+    color: #1a472a;
+    background: #e8f0eb;
+}
+
+.rh-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.rh-modal-header h3 {
+    margin: 0;
+    color: #1a472a;
+    font-size: 20px;
+}
+
+.rh-modal-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.rh-modal-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.rh-modal-address {
+    background: #fafdfb;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid #e8f0eb;
+    font-size: 14px;
+    color: #2d5a3d;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.rh-modal-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: #5a7a68;
+    margin-bottom: 16px;
+}
+
+.rh-modal-photo {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #e8f0eb;
+    margin-bottom: 16px;
+}
+
+.rh-modal-photo img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+}
+
+.rh-modal-comment label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d5a3d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.rh-modal-comment p {
+    margin: 0;
+    color: #444;
+    font-size: 15px;
+    line-height: 1.5;
+    background: #f8faf9;
+    padding: 12px;
+    border-radius: 10px;
+}

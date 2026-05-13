@@ -1,0 +1,164 @@
+.up-container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 32px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.up-title {
+    color: #1a472a;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.up-loading {
+    text-align: center;
+    padding: 60px;
+    color: #5a7a68;
+}
+
+.up-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e8f0eb;
+}
+
+.up-field {
+    margin-bottom: 20px;
+}
+
+.up-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #2d5a3d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.up-value {
+    padding: 12px 0;
+    font-size: 16px;
+    color: #1a472a;
+    font-weight: 500;
+    border-bottom: 2px solid #f0f4f1;
+}
+
+.up-value--big {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2d7a4f;
+    border-bottom: none;
+}
+
+.up-field--id {
+    background: #fafdfb;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 2px solid #e8f0eb;
+}
+
+.up-field--id label {
+    margin-bottom: 8px;
+}
+
+.up-id-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.up-id {
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 13px;
+    color: #5a7a68;
+    word-break: break-all;
+    flex: 1;
+}
+
+.up-copy-btn {
+    background: #e8f0eb;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.up-copy-btn:hover {
+    background: #d4e6d9;
+    transform: scale(1.05);
+}
+
+/* Инпуты */
+.up-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #d4e6d9;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #1a472a;
+    background: #fafdfb;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.up-input:focus {
+    outline: none;
+    border-color: #2d7a4f;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(45, 122, 79, 0.15);
+}
+
+/* Кнопки */
+.up-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.up-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.up-btn--primary {
+    background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
+}
+
+.up-btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 122, 79, 0.4);
+}
+
+.up-btn--secondary {
+    background: #e8f0eb;
+    color: #2d5a3d;
+}
+
+.up-btn--secondary:hover {
+    background: #d4e6d9;
+}
+
+.up-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}

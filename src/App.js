@@ -5,15 +5,18 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Auth from './components/Auth';
 import Map from './components/Map';
 import Header from './components/Header';
+import ReportsHistory from './components/ReportsHistory';
 import { doc, getDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UserProfile from './components/UserProfile';
 
 function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [currentView, setCurrentView] = useState('map');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -27,12 +30,21 @@ function App() {
         } catch (error) {
           console.error("Ошибка загрузки данных пользователя:", error);
         }
+      } else {
+        setUserData(null);
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
+  // При выходе пользователя возвращаемся на карту
+  useEffect(() => {
+    if (!user) {
+      setCurrentView('map');
+    }
+  }, [user]);
 
   const handleRequireAuth = () => {
     toast.info("Оставлять отметки могут только зарегистрированные пользователи", {
@@ -52,16 +64,21 @@ function App() {
       <Header
         user={user}
         onLoginClick={() => setShowAuthModal(true)}
+        onNavigate={setCurrentView}
       />
 
-      {user && userData && (
+      {user && userData && currentView === 'map' && (
         <div className='greeting'>
           Здравствуйте, {userData.firstName}!
         </div>
       )}
 
       <main className='main-content'>
-        <Map user={user} onRequireAuth={handleRequireAuth} />
+        {currentView === 'map' && (
+          <Map user={user} onRequireAuth={handleRequireAuth} />
+        )}
+        {currentView === 'profile' && <UserProfile user={user} userData={userData} />}
+        {currentView === 'reports' && <ReportsHistory />}
       </main>
 
       {showAuthModal && (

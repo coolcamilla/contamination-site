@@ -61,32 +61,94 @@
     box-shadow: 0 4px 15px rgba(45, 122, 79, 0.4);
 }
 
+/* Аватар */
 .user-menu {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
+    color: white;
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-
-.user-name {
-    color: #1a472a;
-    font-weight: 600;
-}
-
-.logout-btn {
-    background: #1a472a;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 8px;
-    cursor: pointer;
+    justify-content: center;
+    font-weight: 700;
     font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    font-family: inherit;
+    letter-spacing: 1px;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(45, 122, 79, 0.3);
+    transition: transform 0.2s ease;
+    user-select: none;
 }
 
-.logout-btn:hover {
-    background: #2d7a4f;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(45, 122, 79, 0.4);
+.user-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* Dropdown — стили без position/zIndex, они задаются inline */
+.user-dropdown {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+    min-width: 180px;
+    border: 1px solid #e8f0eb;
+    animation: dropdownAppear 0.2s ease;
+}
+
+@keyframes dropdownAppear {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Стрелочка */
+.user-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-left: 1px solid #e8f0eb;
+    border-top: 1px solid #e8f0eb;
+    transform: rotate(45deg);
+}
+
+.dropdown-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #2d5a3d;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.dropdown-item:hover {
+    background: #f0f7f2;
+    color: #1a472a;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e8f0eb;
+    margin: 6px 12px;
+}
+
+.dropdown-logout {
+    color: #c44;
+    font-weight: 600;
+}
+
+.dropdown-logout:hover {
+    background: #fff0f0;
+    color: #a33;
 }
