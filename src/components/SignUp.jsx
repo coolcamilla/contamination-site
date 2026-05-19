@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc, increment, addDoc, serverTimestamp, collection } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { DISTRICTS } from "../constants/districts";
 import { ROLES } from "../constants/roles";
@@ -14,6 +14,7 @@ function SignUp({ onSuccess }) {
     const [lastName, setLastName] = useState("");
     const [companyName, setCompanyName] = useState("");
     const [district, setDistrict] = useState(DISTRICTS[0]);
+    const [referralId, setReferralId] = useState("");
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -45,19 +46,46 @@ function SignUp({ onSuccess }) {
 
             await setDoc(doc(db, "Users", user.uid), userData);
 
-            toast.success("Регистрация успешна!", { position: "top-center" });
+            // Реферальная логика
+            if (!isCompany && referralId.trim()) {
+                const referrerDoc = await getDoc(doc(db, "Users", referralId.trim()));
+                
+                if (referrerDoc.exists()) {
+                    // Начисляем 20 коинов пригласившему
+                    await setDoc(doc(db, "Users", referralId.trim()), {
+                        points: increment(20)
+                    }, { merge: true });
+
+                    // Записываем в историю
+                    await addDoc(collection(db, "ecoCoinsHistory"), {
+                        userId: referralId.trim(),
+                        amount: 20,
+                        reason: "Реферальный бонус",
+                        referredUserId: user.uid,
+                        referredUserName: displayName,
+                        createdAt: serverTimestamp()
+                    });
+
+                    toast.success("Регистрация успешна! Друг получил 20 🪙", { position: "top-center" });
+                } else {
+                    toast.warning("Регистрация успешна, но ID друга не найден", { position: "top-center" });
+                }
+            } else {
+                toast.success("Регистрация успешна!", { position: "top-center" });
+            }
 
             setEmail("");
             setPassword("");
             setFirstName("");
             setLastName("");
             setCompanyName("");
+            setReferralId("");
 
             if (onSuccess) onSuccess();
 
         } catch (error) {
             let errorMessage = "Не удалось зарегистрироваться";
-
+            
             if (error.code === 'auth/email-already-in-use') {
                 errorMessage = "Этот email уже зарегистрирован";
             } else if (error.code === 'auth/invalid-email') {
@@ -69,7 +97,7 @@ function SignUp({ onSuccess }) {
             } else {
                 errorMessage = error.message || "Произошла ошибка при регистрации";
             }
-
+            
             toast.error(errorMessage, { position: "top-center", autoClose: 5000 });
         }
     };
@@ -103,7 +131,7 @@ function SignUp({ onSuccess }) {
             {role === ROLES.USER && (
                 <>
                     <div className="mb-3">
-                        <label>Имя</label>
+                        <label>Имя *</label>
                         <input
                             type="text"
                             value={firstName}
@@ -115,7 +143,7 @@ function SignUp({ onSuccess }) {
                     </div>
 
                     <div className="mb-3">
-                        <label>Фамилия</label>
+                        <label>Фамилия *</label>
                         <input
                             type="text"
                             value={lastName}
@@ -127,7 +155,7 @@ function SignUp({ onSuccess }) {
                     </div>
 
                     <div className="mb-3">
-                        <label>Район проживания</label>
+                        <label>Район проживания *</label>
                         <select
                             value={district}
                             className="form-control"
@@ -139,13 +167,26 @@ function SignUp({ onSuccess }) {
                             ))}
                         </select>
                     </div>
+
+                    {/* Реферальное поле — только для пользователей, необязательное */}
+                    <div className="mb-3">
+                        <label>ID друга</label>
+                        <input
+                            type="text"
+                            value={referralId}
+                            className="form-control"
+                            placeholder="Вставьте ID друга (необязательно)"
+                            onChange={(e) => setReferralId(e.target.value)}
+                        />
+                        <small className="form-hint">Ваш друг получит 20 ЭКО Коинов</small>
+                    </div>
                 </>
             )}
 
             {/* Поля для компании */}
             {role === ROLES.COMPANY && (
                 <div className="mb-3">
-                    <label>Название компании</label>
+                    <label>Название компании *</label>
                     <input
                         type="text"
                         value={companyName}
@@ -159,7 +200,7 @@ function SignUp({ onSuccess }) {
 
             {/* Общие поля */}
             <div className="mb-3">
-                <label>Почта</label>
+                <label>Почта *</label>
                 <input
                     type="email"
                     value={email}
@@ -171,7 +212,7 @@ function SignUp({ onSuccess }) {
             </div>
 
             <div className="mb-3">
-                <label>Пароль</label>
+                <label>Пароль *</label>
                 <input
                     type="password"
                     value={password}

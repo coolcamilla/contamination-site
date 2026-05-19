@@ -144,3 +144,10 @@
     background: #e8f5ee;
     color: #1a472a;
 }
+
+.form-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #5a7a68;
+}
