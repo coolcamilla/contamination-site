@@ -234,3 +234,46 @@
     padding: 12px;
     border-radius: 10px;
 }
+
+.rh-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e8f0eb;
+}
+
+.rh-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rh-btn--approve {
+    background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
+}
+
+.rh-btn--approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 122, 79, 0.4);
+}
+
+.rh-btn--reject {
+    background: #fff0f0;
+    color: #c44;
+    border: 2px solid #f5cccc;
+}
+
+.rh-btn--reject:hover {
+    background: #ffe0e0;
+    transform: translateY(-2px);
+}

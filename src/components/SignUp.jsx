@@ -4,12 +4,15 @@ import { auth, db } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { DISTRICTS } from "../constants/districts";
+import { ROLES } from "../constants/roles";
 
-function SignUp({onSuccess}) {
+function SignUp({ onSuccess }) {
+    const [role, setRole] = useState(ROLES.USER);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [companyName, setCompanyName] = useState("");
     const [district, setDistrict] = useState(DISTRICTS[0]);
 
     const handleSignUp = async (e) => {
@@ -18,38 +21,43 @@ function SignUp({onSuccess}) {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            await updateProfile(user, {
-                displayName: `${firstName} ${lastName}`
-            });
+            const isCompany = role === ROLES.COMPANY;
+            const displayName = isCompany ? companyName : `${firstName} ${lastName}`;
 
-            await setDoc(doc(db, "Users", user.uid), {
+            await updateProfile(user, { displayName });
+
+            const userData = {
                 uid: user.uid,
                 email: user.email,
-                firstName: firstName,
-                lastName: lastName,
-                displayName: `${firstName} ${lastName}`,
-                district: district,
+                displayName: displayName,
+                role: role,
                 points: 0,
-                role: "user",
                 createdAt: new Date(),
-            });
+            };
 
-            toast.success("Регистрация успешна!", {
-                position: "top-center",
-            });
+            if (isCompany) {
+                userData.companyName = companyName;
+            } else {
+                userData.firstName = firstName;
+                userData.lastName = lastName;
+                userData.district = district;
+            }
+
+            await setDoc(doc(db, "Users", user.uid), userData);
+
+            toast.success("Регистрация успешна!", { position: "top-center" });
 
             setEmail("");
             setPassword("");
             setFirstName("");
             setLastName("");
+            setCompanyName("");
 
-            if (onSuccess) {
-                onSuccess();
-            }
+            if (onSuccess) onSuccess();
 
         } catch (error) {
             let errorMessage = "Не удалось зарегистрироваться";
-            
+
             if (error.code === 'auth/email-already-in-use') {
                 errorMessage = "Этот email уже зарегистрирован";
             } else if (error.code === 'auth/invalid-email') {
@@ -61,11 +69,8 @@ function SignUp({onSuccess}) {
             } else {
                 errorMessage = error.message || "Произошла ошибка при регистрации";
             }
-            
-            toast.error(errorMessage, {
-                position: "top-center",
-                autoClose: 5000
-            });
+
+            toast.error(errorMessage, { position: "top-center", autoClose: 5000 });
         }
     };
 
@@ -73,30 +78,86 @@ function SignUp({onSuccess}) {
         <form onSubmit={handleSignUp}>
             <h3>Регистрация</h3>
 
+            {/* Переключатель роли */}
             <div className="mb-3">
-                <label>Имя</label>
-                <input
-                    type="text"
-                    value={firstName}
-                    className="form-control"
-                    placeholder="Имя"
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                />
+                <label>Тип аккаунта</label>
+                <div className="role-selector">
+                    <button
+                        type="button"
+                        className={`role-btn ${role === ROLES.USER ? "active" : ""}`}
+                        onClick={() => setRole(ROLES.USER)}
+                    >
+                        👤 Пользователь
+                    </button>
+                    <button
+                        type="button"
+                        className={`role-btn ${role === ROLES.COMPANY ? "active" : ""}`}
+                        onClick={() => setRole(ROLES.COMPANY)}
+                    >
+                        🏢 Управляющая компания
+                    </button>
+                </div>
             </div>
 
-            <div className="mb-3">
-                <label>Фамилия</label>
-                <input
-                    type="text"
-                    value={lastName}
-                    className="form-control"
-                    placeholder="Фамилия"
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                />
-            </div>
+            {/* Поля для пользователя */}
+            {role === ROLES.USER && (
+                <>
+                    <div className="mb-3">
+                        <label>Имя</label>
+                        <input
+                            type="text"
+                            value={firstName}
+                            className="form-control"
+                            placeholder="Имя"
+                            onChange={(e) => setFirstName(e.target.value)}
+                            required
+                        />
+                    </div>
 
+                    <div className="mb-3">
+                        <label>Фамилия</label>
+                        <input
+                            type="text"
+                            value={lastName}
+                            className="form-control"
+                            placeholder="Фамилия"
+                            onChange={(e) => setLastName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Район проживания</label>
+                        <select
+                            value={district}
+                            className="form-control"
+                            onChange={(e) => setDistrict(e.target.value)}
+                            required
+                        >
+                            {DISTRICTS.map((d) => (
+                                <option key={d} value={d}>{d}</option>
+                            ))}
+                        </select>
+                    </div>
+                </>
+            )}
+
+            {/* Поля для компании */}
+            {role === ROLES.COMPANY && (
+                <div className="mb-3">
+                    <label>Название компании</label>
+                    <input
+                        type="text"
+                        value={companyName}
+                        className="form-control"
+                        placeholder="Название компании"
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        required
+                    />
+                </div>
+            )}
+
+            {/* Общие поля */}
             <div className="mb-3">
                 <label>Почта</label>
                 <input
@@ -119,20 +180,6 @@ function SignUp({onSuccess}) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-            </div>
-
-            <div className="mb-3">
-                <label>Район проживания</label>
-                <select
-                    value={district}
-                    className="form-control"
-                    onChange={(e) => setDistrict(e.target.value)}
-                    required
-                >
-                    {DISTRICTS.map((d) => (
-                        <option key={d} value={d}>{d}</option>
-                    ))}
-                </select>
             </div>
 
             <button type="submit" className="btn-submit">

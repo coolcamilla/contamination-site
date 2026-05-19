@@ -6,10 +6,11 @@ import Auth from './components/Auth';
 import Map from './components/Map';
 import Header from './components/Header';
 import ReportsHistory from './components/ReportsHistory';
+import UserProfile from './components/UserProfile';
+import EcoCoins from './components/EcoCoins';
 import { doc, getDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import UserProfile from './components/UserProfile';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,7 +40,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // При выходе пользователя возвращаемся на карту
   useEffect(() => {
     if (!user) {
       setCurrentView('map');
@@ -58,16 +58,20 @@ function App() {
     return <div>Загрузка...</div>;
   }
 
+  const isCompany = userData?.role === "company";
+
   return (
     <div className='app'>
       <ToastContainer />
       <Header
         user={user}
+        userData={userData}
         onLoginClick={() => setShowAuthModal(true)}
         onNavigate={setCurrentView}
       />
 
-      {user && userData && currentView === 'map' && (
+      {/* Приветствие только для обычных пользователей */}
+      {user && userData && !isCompany && currentView === 'map' && (
         <div className='greeting'>
           Здравствуйте, {userData.firstName}!
         </div>
@@ -75,10 +79,11 @@ function App() {
 
       <main className='main-content'>
         {currentView === 'map' && (
-          <Map user={user} onRequireAuth={handleRequireAuth} />
+          <Map user={user} userData={userData} onRequireAuth={handleRequireAuth} />
         )}
+        {currentView === 'reports' && <ReportsHistory userData={userData} />}
         {currentView === 'profile' && <UserProfile user={user} userData={userData} />}
-        {currentView === 'reports' && <ReportsHistory />}
+        {currentView === 'ecoCoins' && <EcoCoins />}
       </main>
 
       {showAuthModal && (

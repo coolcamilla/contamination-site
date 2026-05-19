@@ -5,10 +5,12 @@ import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import "./Header.css";
 
-function Header({ user, onLoginClick, onNavigate }) {  // ← добавлен onNavigate
+function Header({ user, userData, onLoginClick, onNavigate }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [menuPos, setMenuPos] = useState({ top: 0, right: 0 });
     const avatarRef = useRef(null);
+
+    const isCompany = userData?.role === "company";
 
     const handleLogOut = async () => {
         try {
@@ -43,6 +45,7 @@ function Header({ user, onLoginClick, onNavigate }) {  // ← добавлен o
         setMenuOpen(true);
     };
 
+    // Разное меню для пользователя и компании
     const dropdownContent = (
         <div
             className="user-dropdown"
@@ -61,7 +64,13 @@ function Header({ user, onLoginClick, onNavigate }) {  // ← добавлен o
             <div className="dropdown-item" onClick={() => { onNavigate('reports'); setMenuOpen(false); }}>
                 Заявки
             </div>
-            <div className="dropdown-item">ЭКО Коины</div>
+
+            {!isCompany && (
+                <div className="dropdown-item" onClick={() => { onNavigate('ecoCoins'); setMenuOpen(false); }}>
+                    ЭКО Коины
+                </div>
+            )}
+
             <div className="dropdown-divider" />
             <div className="dropdown-item dropdown-logout" onClick={handleLogOut}>
                 Выйти
@@ -71,7 +80,7 @@ function Header({ user, onLoginClick, onNavigate }) {  // ← добавлен o
 
     return (
         <header className="header">
-            <div className="header-logo" onClick={() => onNavigate('map')} style={{cursor: 'pointer'}}>
+            <div className="header-logo" onClick={() => onNavigate('map')} style={{ cursor: 'pointer' }}>
                 <h1>ЭКО Патруль NN</h1>
             </div>
 
