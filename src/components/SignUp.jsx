@@ -46,17 +46,14 @@ function SignUp({ onSuccess }) {
 
             await setDoc(doc(db, "Users", user.uid), userData);
 
-            // Реферальная логика
             if (!isCompany && referralId.trim()) {
                 const referrerDoc = await getDoc(doc(db, "Users", referralId.trim()));
                 
                 if (referrerDoc.exists()) {
-                    // Начисляем 20 коинов пригласившему
                     await setDoc(doc(db, "Users", referralId.trim()), {
                         points: increment(20)
                     }, { merge: true });
 
-                    // Записываем в историю
                     await addDoc(collection(db, "ecoCoinsHistory"), {
                         userId: referralId.trim(),
                         amount: 20,
@@ -66,7 +63,7 @@ function SignUp({ onSuccess }) {
                         createdAt: serverTimestamp()
                     });
 
-                    toast.success("Регистрация успешна! Друг получил 20 🪙", { position: "top-center" });
+                    toast.success("Регистрация успешна! Друг получил 20 коинов", { position: "top-center" });
                 } else {
                     toast.warning("Регистрация успешна, но ID друга не найден", { position: "top-center" });
                 }
@@ -130,55 +127,56 @@ function SignUp({ onSuccess }) {
             {/* Поля для пользователя */}
             {role === ROLES.USER && (
                 <>
-                    <div className="mb-3">
-                        <label>Имя *</label>
-                        <input
-                            type="text"
-                            value={firstName}
-                            className="form-control"
-                            placeholder="Имя"
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
-                        />
+                    <div className="form-row">
+                        <div className="form-col">
+                            <label>Имя *</label>
+                            <input
+                                type="text"
+                                value={firstName}
+                                className="form-control"
+                                placeholder="Имя"
+                                onChange={(e) => setFirstName(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-col">
+                            <label>Фамилия *</label>
+                            <input
+                                type="text"
+                                value={lastName}
+                                className="form-control"
+                                placeholder="Фамилия"
+                                onChange={(e) => setLastName(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
 
-                    <div className="mb-3">
-                        <label>Фамилия *</label>
-                        <input
-                            type="text"
-                            value={lastName}
-                            className="form-control"
-                            placeholder="Фамилия"
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label>Район проживания *</label>
-                        <select
-                            value={district}
-                            className="form-control"
-                            onChange={(e) => setDistrict(e.target.value)}
-                            required
-                        >
-                            {DISTRICTS.map((d) => (
-                                <option key={d} value={d}>{d}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Реферальное поле — только для пользователей, необязательное */}
-                    <div className="mb-3">
-                        <label>ID друга</label>
-                        <input
-                            type="text"
-                            value={referralId}
-                            className="form-control"
-                            placeholder="Вставьте ID друга (необязательно)"
-                            onChange={(e) => setReferralId(e.target.value)}
-                        />
-                        <small className="form-hint">Ваш друг получит 20 ЭКО Коинов</small>
+                    <div className="form-row">
+                        <div className="form-col">
+                            <label>Район проживания *</label>
+                            <select
+                                value={district}
+                                className="form-control"
+                                onChange={(e) => setDistrict(e.target.value)}
+                                required
+                            >
+                                {DISTRICTS.map((d) => (
+                                    <option key={d} value={d}>{d}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-col">
+                            <label>ID друга</label>
+                            <input
+                                type="text"
+                                value={referralId}
+                                className="form-control"
+                                placeholder="ID друга"
+                                onChange={(e) => setReferralId(e.target.value)}
+                            />
+                            <small className="form-hint">Друг получит 20 коинов</small>
+                        </div>
                     </div>
                 </>
             )}
@@ -199,28 +197,29 @@ function SignUp({ onSuccess }) {
             )}
 
             {/* Общие поля */}
-            <div className="mb-3">
-                <label>Почта *</label>
-                <input
-                    type="email"
-                    value={email}
-                    className="form-control"
-                    placeholder="Почта"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </div>
-
-            <div className="mb-3">
-                <label>Пароль *</label>
-                <input
-                    type="password"
-                    value={password}
-                    className="form-control"
-                    placeholder="Пароль"
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+            <div className="form-row">
+                <div className="form-col">
+                    <label>Почта *</label>
+                    <input
+                        type="email"
+                        value={email}
+                        className="form-control"
+                        placeholder="Почта"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-col">
+                    <label>Пароль *</label>
+                    <input
+                        type="password"
+                        value={password}
+                        className="form-control"
+                        placeholder="Пароль"
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
             </div>
 
             <button type="submit" className="btn-submit">

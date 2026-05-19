@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
+    padding: clamp(10px, 2vh, 15px) clamp(16px, 3vw, 40px);
     background: white;
     box-shadow: 0 4px 20px rgba(45, 122, 79, 0.15);
     position: sticky;
@@ -13,23 +13,23 @@
 
 .header-logo h1 {
     margin: 0;
-    font-size: 24px;
+    font-size: clamp(18px, 3vw, 24px);
     color: #1a472a;
     font-weight: 700;
 }
 
 .header-nav {
     display: flex;
-    gap: 40px;
+    gap: clamp(16px, 3vw, 40px);
     margin-left: auto;
-    margin-right: 30px;
+    margin-right: clamp(16px, 2vw, 30px);
 }
 
 .nav-link {
     text-decoration: none;
     color: #1a472a;
     font-weight: 600;
-    font-size: 15px;
+    font-size: clamp(12px, 1.8vw, 15px);
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -43,10 +43,10 @@
     background: #2d7a4f;
     color: white;
     border: none;
-    padding: 10px 24px;
-    border-radius: 8px;
+    padding: clamp(8px, 1.5vh, 10px) clamp(16px, 2vw, 24px);
+    border-radius: clamp(6px, 1vw, 8px);
     cursor: pointer;
-    font-size: 15px;
+    font-size: clamp(12px, 1.8vw, 15px);
     font-weight: 600;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -69,8 +69,8 @@
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: clamp(32px, 5vh, 40px);
+    height: clamp(32px, 5vh, 40px);
     border-radius: 50%;
     background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
     color: white;
@@ -78,7 +78,7 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: clamp(11px, 1.8vh, 14px);
     letter-spacing: 1px;
     border: 2px solid white;
     box-shadow: 0 2px 8px rgba(45, 122, 79, 0.3);
@@ -90,13 +90,13 @@
     transform: scale(1.05);
 }
 
-/* Dropdown — стили без position/zIndex, они задаются inline */
+/* Dropdown */
 .user-dropdown {
     background: white;
-    border-radius: 12px;
+    border-radius: clamp(8px, 1.5vw, 12px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    padding: 8px 0;
-    min-width: 180px;
+    padding: clamp(6px, 1.5vh, 8px) 0;
+    min-width: clamp(160px, 20vw, 180px);
     border: 1px solid #e8f0eb;
     animation: dropdownAppear 0.2s ease;
 }
@@ -121,14 +121,14 @@
 }
 
 .dropdown-item {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: clamp(8px, 2vh, 10px) clamp(12px, 2vw, 16px);
+    font-size: clamp(12px, 2vh, 14px);
     color: #2d5a3d;
     cursor: pointer;
     transition: all 0.15s ease;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(6px, 1vw, 8px);
     white-space: nowrap;
 }
 
@@ -140,7 +140,7 @@
 .dropdown-divider {
     height: 1px;
     background: #e8f0eb;
-    margin: 6px 12px;
+    margin: clamp(4px, 1vh, 6px) clamp(8px, 1.5vw, 12px);
 }
 
 .dropdown-logout {
@@ -151,4 +151,22 @@
 .dropdown-logout:hover {
     background: #fff0f0;
     color: #a33;
+}
+
+/* Медиа-запрос для мобильных */
+@media (max-width: 768px) {
+    .header-nav {
+        gap: 12px;
+        margin-right: 12px;
+    }
+    
+    .nav-link {
+        font-size: 12px;
+        letter-spacing: 0.3px;
+    }
+    
+    .login-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
 }

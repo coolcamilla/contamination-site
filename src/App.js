@@ -70,16 +70,25 @@ function App() {
         onNavigate={setCurrentView}
       />
 
-      {/* Приветствие только для обычных пользователей */}
       {user && userData && !isCompany && currentView === 'map' && (
         <div className='greeting'>
-          Здравствуйте, {userData.firstName}!
+          <div className='greeting-name'>Здравствуйте, {userData.firstName}!</div>
+          <div className='greeting-hint'>Нажмите на карту, чтобы добавить метку</div>
         </div>
       )}
 
       <main className='main-content'>
         {currentView === 'map' && (
-          <Map user={user} userData={userData} onRequireAuth={handleRequireAuth} />
+          <>
+            <Map user={user} userData={userData} onRequireAuth={handleRequireAuth} />
+            
+            {/* Секция "О проекте" — только на главной */}
+            <section className="about-section">
+              <div className="about-content">
+                <h2>О проекте</h2>
+              </div>
+            </section>
+          </>
         )}
         {currentView === 'reports' && <ReportsHistory userData={userData} />}
         {currentView === 'profile' && <UserProfile user={user} userData={userData} />}
