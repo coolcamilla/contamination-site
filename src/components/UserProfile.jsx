@@ -14,8 +14,11 @@ function UserProfile({ user, userData: initialUserData }) {
         firstName: "",
         lastName: "",
         district: "",
+        companyName: "",
     });
     const [saving, setSaving] = useState(false);
+
+    const isCompany = userData?.role === "company";
 
     useEffect(() => {
         if (!user) return;
@@ -28,22 +31,37 @@ function UserProfile({ user, userData: initialUserData }) {
                     firstName: data.firstName || "",
                     lastName: data.lastName || "",
                     district: data.district || DISTRICTS[0],
+                    companyName: data.companyName || "",
                 });
             }
         };
         fetchData();
     }, [user]);
 
-    // Считаем количество заявок
     useEffect(() => {
         if (!user) return;
+
         const countReports = async () => {
-            const q = query(collection(db, "reports"), where("userId", "==", user.uid));
-            const snapshot = await getCountFromServer(q);
-            setReportsCount(snapshot.data().count);
+            if (isCompany) {
+                // Компания: заявки со статусом НЕ "pending" (обработанные)
+                const q = query(
+                    collection(db, "reports"),
+                    where("status", "!=", "pending")
+                );
+                const snapshot = await getCountFromServer(q);
+                setReportsCount(snapshot.data().count);
+            } else {
+                // Пользователь: все свои заявки
+                const q = query(
+                    collection(db, "reports"),
+                    where("userId", "==", user.uid)
+                );
+                const snapshot = await getCountFromServer(q);
+                setReportsCount(snapshot.data().count);
+            }
         };
         countReports();
-    }, [user]);
+    }, [user, isCompany]);
 
     const handleCopyId = () => {
         if (user?.uid) {
@@ -60,25 +78,22 @@ function UserProfile({ user, userData: initialUserData }) {
         if (!user) return;
         setSaving(true);
         try {
-            const newDisplayName = `${formData.firstName} ${formData.lastName}`.trim();
+            const updates = {};
 
-            await updateDoc(doc(db, "Users", user.uid), {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                displayName: newDisplayName,
-                district: formData.district,
-            });
+            if (isCompany) {
+                updates.companyName = formData.companyName;
+                updates.displayName = formData.companyName;
+            } else {
+                updates.firstName = formData.firstName;
+                updates.lastName = formData.lastName;
+                updates.displayName = `${formData.firstName} ${formData.lastName}`.trim();
+                updates.district = formData.district;
+            }
 
-            await updateProfile(user, { displayName: newDisplayName });
+            await updateDoc(doc(db, "Users", user.uid), updates);
+            await updateProfile(user, { displayName: updates.displayName });
 
-            setUserData((prev) => ({
-                ...prev,
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                displayName: newDisplayName,
-                district: formData.district,
-            }));
-
+            setUserData((prev) => ({ ...prev, ...updates }));
             toast.success("Данные обновлены!", { position: "top-center" });
             setIsEditing(false);
         } catch (err) {
@@ -109,60 +124,81 @@ function UserProfile({ user, userData: initialUserData }) {
                     </div>
                 </div>
 
-                {/* Имя */}
-                <div className="up-field">
-                    <label>Имя</label>
-                    {isEditing ? (
-                        <input
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            className="up-input"
-                        />
-                    ) : (
-                        <div className="up-value">{userData.firstName}</div>
-                    )}
-                </div>
+                {/* Для компании: название */}
+                {isCompany ? (
+                    <div className="up-field">
+                        <label>Название компании</label>
+                        {isEditing ? (
+                            <input
+                                name="companyName"
+                                value={formData.companyName}
+                                onChange={handleChange}
+                                className="up-input"
+                            />
+                        ) : (
+                            <div className="up-value">{userData.companyName}</div>
+                        )}
+                    </div>
+                ) : (
+                    <>
+                        {/* Для пользователя: имя, фамилия, район */}
+                        <div className="up-field">
+                            <label>Имя</label>
+                            {isEditing ? (
+                                <input
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    className="up-input"
+                                />
+                            ) : (
+                                <div className="up-value">{userData.firstName}</div>
+                            )}
+                        </div>
 
-                {/* Фамилия */}
-                <div className="up-field">
-                    <label>Фамилия</label>
-                    {isEditing ? (
-                        <input
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            className="up-input"
-                        />
-                    ) : (
-                        <div className="up-value">{userData.lastName}</div>
-                    )}
-                </div>
+                        <div className="up-field">
+                            <label>Фамилия</label>
+                            {isEditing ? (
+                                <input
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    className="up-input"
+                                />
+                            ) : (
+                                <div className="up-value">{userData.lastName}</div>
+                            )}
+                        </div>
 
-                {/* Район */}
-                <div className="up-field">
-                    <label>Район проживания</label>
-                    {isEditing ? (
-                        <select
-                            name="district"
-                            value={formData.district}
-                            onChange={handleChange}
-                            className="up-input"
-                        >
-                            {DISTRICTS.map((d) => (
-                                <option key={d} value={d}>{d}</option>
-                            ))}
-                        </select>
-                    ) : (
-                        <div className="up-value">{userData.district}</div>
-                    )}
-                </div>
+                        <div className="up-field">
+                            <label>Район проживания</label>
+                            {isEditing ? (
+                                <select
+                                    name="district"
+                                    value={formData.district}
+                                    onChange={handleChange}
+                                    className="up-input"
+                                >
+                                    {DISTRICTS.map((d) => (
+                                        <option key={d} value={d}>{d}</option>
+                                    ))}
+                                </select>
+                            ) : (
+                                <div className="up-value">{userData.district}</div>
+                            )}
+                        </div>
+                    </>
+                )}
 
+                {/* Заявки */}
                 <div className="up-field up-field--readonly">
-                    <label>Отправлено заявок</label>
+                    <label>
+                        {isCompany ? "Обработано заявок" : "Отправлено заявок"}
+                    </label>
                     <div className="up-value up-value--big">{reportsCount}</div>
                 </div>
 
+                {/* Кнопки */}
                 <div className="up-actions">
                     {isEditing ? (
                         <>

@@ -1,9 +1,10 @@
 import { MapContainer, TileLayer, useMap, useMapEvents, Marker } from 'react-leaflet';
 import { useState, useEffect } from "react";
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import L from 'leaflet';
 import { getLevelInfo } from '../constants/levels';
+import { toast } from 'react-toastify';
 import './Map.css';
 import 'leaflet/dist/leaflet.css';
 import ReportForm from './ReportForm';
@@ -54,7 +55,68 @@ function MapClickHandler({ onClick }) {
     return null;
 }
 
-function Map({ user, onRequireAuth }) {
+// Модалка для компании с кнопкой "Выполнить"
+function CompanyReportModal({ report, onClose, onComplete }) {
+    const level = getLevelInfo(report.trashLevel);
+
+    const handleComplete = async () => {
+        try {
+            await updateDoc(doc(db, "reports", report.id), { status: "completed" });
+            toast.success("Заявка выполнена!", { position: "top-center" });
+            onComplete();
+            onClose();
+        } catch (err) {
+            console.error(err);
+            toast.error("Ошибка при выполнении", { position: "bottom-center" });
+        }
+    };
+
+    return (
+        <div className="report-card-overlay" onClick={onClose}>
+            <div className="report-card" onClick={(e) => e.stopPropagation()}>
+                <button className="report-card-close" onClick={onClose}>×</button>
+
+                <div className="rh-modal-header">
+                    <div className="rh-modal-dot" style={{ backgroundColor: level.color }} />
+                    <h3>Заявка №{report.id.slice(0, 6).toUpperCase()}</h3>
+                </div>
+
+                <div className="rh-modal-status" style={{ color: level.color, background: '#e8f5ee' }}>
+                    {level.text}
+                </div>
+
+                {report.address && (
+                    <div className="rh-modal-address">📍 {report.address}</div>
+                )}
+
+                <div className="rh-modal-meta">
+                    <span>📅 {report.createdAt?.toDate?.().toLocaleDateString('ru-RU') || '—'}</span>
+                </div>
+
+                {report.photoUrl && (
+                    <div className="rh-modal-photo">
+                        <img src={report.photoUrl} alt="Фото" />
+                    </div>
+                )}
+
+                {report.comment && (
+                    <div className="rh-modal-comment">
+                        <label>Комментарий</label>
+                        <p>{report.comment}</p>
+                    </div>
+                )}
+
+                <div className="rh-modal-actions">
+                    <button className="rh-btn rh-btn--complete" onClick={handleComplete}>
+                        ✓ Выполнить
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function Map({ user, userData, onRequireAuth }) {
     const center = [56.3269, 44.0075];
     const [showForm, setShowForm] = useState(false);
     const [selectedCoords, setSelectedCoords] = useState(null);
@@ -62,17 +124,30 @@ function Map({ user, onRequireAuth }) {
     const [containers, setContainers] = useState([]);
     const [selectedReport, setSelectedReport] = useState(null);
 
+    const isCompany = userData?.role === "company";
+
+    // Компания видит одобренные, пользователь — одобренные (для просмотра)
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, "reports"), (snapshot) => {
-            const reportsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const q = query(
+            collection(db, "reports"),
+            where("status", "==", "approved")
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const reportsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
             setReports(reportsData);
         });
+
         return () => unsubscribe();
     }, []);
 
+    // Загрузка контейнеров
     useEffect(() => {
         const fetchContainers = async () => {
-            const query = `
+            const queryStr = `
                 [out:json];
                 (
                   node["amenity"="waste_disposal"](56.196918,43.898289,56.336481,44.120180);
@@ -83,7 +158,7 @@ function Map({ user, onRequireAuth }) {
             try {
                 const response = await fetch('https://overpass-api.de/api/interpreter', {
                     method: 'POST',
-                    body: query
+                    body: queryStr
                 });
                 const data = await response.json();
                 const containerData = data.elements
@@ -106,6 +181,8 @@ function Map({ user, onRequireAuth }) {
             if (onRequireAuth) onRequireAuth();
             return;
         }
+        // Компания не создаёт заявки
+        if (isCompany) return;
         setSelectedCoords(e.latlng);
         setShowForm(true);
     };
@@ -159,11 +236,22 @@ function Map({ user, onRequireAuth }) {
                 ))}
             </MapContainer>
 
-            {showForm && selectedCoords && (
+            {/* Форма создания заявки — только для пользователей */}
+            {showForm && selectedCoords && !isCompany && (
                 <ReportForm coords={selectedCoords} onClose={handleFormClose} onSuccess={handleFormSuccess} />
             )}
 
-            {selectedReport && (
+            {/* Модалка для компании */}
+            {selectedReport && isCompany && (
+                <CompanyReportModal
+                    report={selectedReport}
+                    onClose={() => setSelectedReport(null)}
+                    onComplete={() => { /* метка пропадёт автоматически через onSnapshot */ }}
+                />
+            )}
+
+            {/* Обычная карточка для пользователей */}
+            {selectedReport && !isCompany && (
                 <ReportCard report={selectedReport} onClose={() => setSelectedReport(null)} />
             )}
         </div>

@@ -1,0 +1,247 @@
+/* ===== СТРАНИЦА ===== */
+.ec-page {
+    width: 100%;
+}
+
+/* ===== СЕКЦИИ ===== */
+.ec-section {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.ec-section--white {
+    background: #ffffff;
+}
+
+.ec-section--green {
+    background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+}
+
+.ec-content {
+    width: 100%;
+    max-width: 600px;
+}
+
+/* ===== ЗАГРУЗКА ===== */
+.ec-loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5a7a68;
+    font-size: 16px;
+}
+
+/* ===== БАЛАНС ===== */
+.ec-balance-card {
+    background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 32px rgba(45, 122, 79, 0.3);
+    margin-bottom: 32px;
+}
+
+.ec-balance-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.ec-balance-value {
+    font-size: 48px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.ec-coin-icon {
+    font-size: 40px;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
+.ec-title {
+    color: #1a472a;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.ec-title--light {
+    color: white;
+}
+
+/* ===== ПУСТОЕ СОСТОЯНИЕ ===== */
+.ec-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #5a7a68;
+}
+
+.ec-empty p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a472a;
+    margin-bottom: 8px;
+}
+
+.ec-empty span {
+    font-size: 14px;
+}
+
+.ec-empty--light p {
+    color: white;
+}
+
+.ec-empty--light span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== ИСТОРИЯ ===== */
+.ec-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ec-history-item {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 2px solid #e8f0eb;
+    transition: all 0.2s ease;
+}
+
+.ec-history-item:hover {
+    border-color: #b8d4c4;
+    transform: translateX(4px);
+}
+
+.ec-history-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ec-history-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d7a4f;
+}
+
+.ec-history-reason {
+    font-size: 14px;
+    color: #2d5a3d;
+    font-weight: 500;
+}
+
+.ec-history-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+}
+
+.ec-history-report {
+    font-family: monospace;
+    color: #5a7a68;
+}
+
+/* ===== МАГАЗИНЫ ===== */
+.ec-stores-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ec-stores-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.ec-stores-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.ec-stores-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+/* Карточка магазина */
+.ec-store-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ec-store-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.ec-store-image {
+    height: 160px;
+    overflow: hidden;
+    background: #f0f7f2;
+}
+
+.ec-store-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.ec-store-card:hover .ec-store-image img {
+    transform: scale(1.05);
+}
+
+.ec-store-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    background: #e8f0eb;
+}
+
+.ec-store-info {
+    padding: 16px;
+}
+
+.ec-store-info h3 {
+    margin: 0 0 8px 0;
+    color: #1a472a;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.ec-store-link {
+    color: #2d7a4f;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

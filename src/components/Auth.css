@@ -114,3 +114,33 @@
     color: #1a472a;
     text-decoration: underline;
 }
+
+.role-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #d4e6d9;
+    border-radius: 10px;
+    background: #fafdfb;
+    color: #5a7a68;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.role-btn:hover {
+    border-color: #b8d4c4;
+}
+
+.role-btn.active {
+    border-color: #2d7a4f;
+    background: #e8f5ee;
+    color: #1a472a;
+}
