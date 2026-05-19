@@ -1,55 +1,55 @@
 .up-container {
-    max-width: 520px;
+    max-width: min(95vw, 520px);
     margin: 0 auto;
-    padding: 32px 20px;
+    padding: clamp(20px, 4vh, 32px) clamp(12px, 2vw, 20px);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .up-title {
     color: #1a472a;
-    font-size: 28px;
+    font-size: clamp(22px, 4vh, 28px);
     font-weight: 700;
-    margin-bottom: 24px;
+    margin-bottom: clamp(16px, 3vh, 24px);
 }
 
 .up-loading {
     text-align: center;
-    padding: 60px;
+    padding: clamp(40px, 8vh, 60px) clamp(12px, 2vw, 20px);
     color: #5a7a68;
 }
 
 .up-card {
     background: white;
-    border-radius: 16px;
-    padding: 28px;
+    border-radius: clamp(12px, 2vw, 16px);
+    padding: clamp(16px, 3vh, 28px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     border: 2px solid #e8f0eb;
 }
 
 .up-field {
-    margin-bottom: 20px;
+    margin-bottom: clamp(12px, 2.5vh, 20px);
 }
 
 .up-field label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: clamp(4px, 1vh, 6px);
     font-weight: 600;
     color: #2d5a3d;
-    font-size: 12px;
+    font-size: clamp(10px, 2vh, 12px);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .up-value {
-    padding: 12px 0;
-    font-size: 16px;
+    padding: clamp(8px, 2vh, 12px) 0;
+    font-size: clamp(14px, 2.5vh, 16px);
     color: #1a472a;
     font-weight: 500;
     border-bottom: 2px solid #f0f4f1;
 }
 
 .up-value--big {
-    font-size: 32px;
+    font-size: clamp(24px, 5vh, 32px);
     font-weight: 700;
     color: #2d7a4f;
     border-bottom: none;
@@ -57,24 +57,24 @@
 
 .up-field--id {
     background: #fafdfb;
-    padding: 14px 16px;
-    border-radius: 10px;
+    padding: clamp(10px, 2vh, 14px) clamp(12px, 2vw, 16px);
+    border-radius: clamp(8px, 1.5vw, 10px);
     border: 2px solid #e8f0eb;
 }
 
 .up-field--id label {
-    margin-bottom: 8px;
+    margin-bottom: clamp(4px, 1vh, 8px);
 }
 
 .up-id-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: clamp(6px, 1.5vw, 10px);
 }
 
 .up-id {
     font-family: 'SF Mono', Monaco, monospace;
-    font-size: 13px;
+    font-size: clamp(11px, 2vh, 13px);
     color: #5a7a68;
     word-break: break-all;
     flex: 1;
@@ -83,10 +83,10 @@
 .up-copy-btn {
     background: #e8f0eb;
     border: none;
-    border-radius: 8px;
-    padding: 8px 10px;
+    border-radius: clamp(6px, 1vw, 8px);
+    padding: clamp(6px, 1.5vh, 8px) clamp(8px, 1.5vw, 10px);
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vh, 16px);
     transition: all 0.2s;
     flex-shrink: 0;
 }
@@ -99,10 +99,10 @@
 /* Инпуты */
 .up-input {
     width: 100%;
-    padding: 12px 14px;
+    padding: clamp(10px, 2vh, 12px) clamp(12px, 2vw, 14px);
     border: 2px solid #d4e6d9;
-    border-radius: 10px;
-    font-size: 15px;
+    border-radius: clamp(8px, 1.5vw, 10px);
+    font-size: clamp(13px, 2.5vh, 15px);
     font-family: inherit;
     color: #1a472a;
     background: #fafdfb;
@@ -120,16 +120,16 @@
 /* Кнопки */
 .up-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 28px;
+    gap: clamp(8px, 1.5vw, 12px);
+    margin-top: clamp(20px, 3vh, 28px);
 }
 
 .up-btn {
     flex: 1;
-    padding: 14px;
+    padding: clamp(10px, 2vh, 14px);
     border: none;
-    border-radius: 10px;
-    font-size: 15px;
+    border-radius: clamp(8px, 1.5vw, 10px);
+    font-size: clamp(13px, 2.5vh, 15px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -161,4 +161,52 @@
     opacity: 0.6;
     cursor: not-allowed;
     transform: none !important;
+}
+
+/* Медиа-запрос для мобильных */
+@media (max-width: 768px) {
+    .up-container {
+        padding: 16px;
+        max-width: 100vw;
+    }
+
+    .up-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .up-title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .up-value--big {
+        font-size: 28px;
+    }
+
+    .up-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .up-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
+    }
+
+    .up-input {
+        padding: 14px;
+        font-size: 16px; /* предотвращает зум iOS при фокусе */
+    }
+
+    .up-copy-btn {
+        padding: 10px 12px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .up-id {
+        font-size: 12px;
+    }
 }

@@ -9,14 +9,16 @@
     align-items: center;
     z-index: 2000;
     pointer-events: none;
+    padding: clamp(10px, 2vh, 20px);
 }
 
 .report-card {
     background: white;
-    border-radius: 16px;
-    padding: 24px;
-    width: 90%;
-    max-width: 340px;
+    border-radius: clamp(12px, 2vw, 16px);
+    padding: clamp(16px, 3vh, 24px);
+    width: min(90vw, 340px);
+    max-height: 85vh;
+    overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
     position: relative;
     pointer-events: auto;
@@ -31,15 +33,15 @@
 
 .report-card-close {
     position: absolute;
-    top: 12px;
-    right: 16px;
+    top: clamp(8px, 1.5vh, 12px);
+    right: clamp(12px, 2vw, 16px);
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: clamp(20px, 3vh, 24px);
     cursor: pointer;
     color: #b8d4c4;
-    width: 32px;
-    height: 32px;
+    width: clamp(28px, 4vh, 32px);
+    height: clamp(28px, 4vh, 32px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,13 +57,13 @@
 .report-card-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: clamp(6px, 1vw, 10px);
+    margin-bottom: clamp(8px, 2vh, 12px);
 }
 
 .report-card-dot {
-    width: 16px;
-    height: 16px;
+    width: clamp(12px, 2.5vh, 16px);
+    height: clamp(12px, 2.5vh, 16px);
     border-radius: 50%;
     border: 2px solid white;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -70,44 +72,71 @@
 
 .report-card-title {
     font-weight: 700;
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vh, 16px);
     color: #1a472a;
 }
 
 .report-card-address {
-    font-size: 13px;
+    font-size: clamp(11px, 2vh, 13px);
     color: #555;
     background: #fafdfb;
-    padding: 8px 10px;
-    border-radius: 8px;
+    padding: clamp(6px, 1.5vh, 8px) clamp(8px, 2vw, 10px);
+    border-radius: clamp(6px, 1vw, 8px);
     border: 1px solid #e8f0eb;
-    margin-bottom: 12px;
+    margin-bottom: clamp(8px, 2vh, 12px);
     line-height: 1.4;
 }
 
 .report-card-photo {
-    border-radius: 10px;
+    border-radius: clamp(8px, 1.5vw, 10px);
     overflow: hidden;
     border: 2px solid #e8f0eb;
-    margin-bottom: 12px;
+    margin-bottom: clamp(8px, 2vh, 12px);
 }
 
 .report-card-photo img {
     display: block;
     width: 100%;
-    max-height: 200px;
+    max-height: clamp(120px, 25vh, 200px);
     object-fit: cover;
 }
 
 .report-card-comment {
-    font-size: 14px;
+    font-size: clamp(12px, 2.2vh, 14px);
     color: #444;
     line-height: 1.5;
-    margin-bottom: 12px;
+    margin-bottom: clamp(8px, 2vh, 12px);
 }
 
 .report-card-date {
-    font-size: 12px;
+    font-size: clamp(10px, 1.8vh, 12px);
     color: #888;
     text-align: right;
+}
+
+/* Скроллбар */
+.report-card::-webkit-scrollbar {
+    width: 4px;
+}
+
+.report-card::-webkit-scrollbar-track {
+    background: #f0f4f1;
+    border-radius: 2px;
+}
+
+.report-card::-webkit-scrollbar-thumb {
+    background: #b8d4c4;
+    border-radius: 2px;
+}
+
+/* Медиа-запрос для очень маленьких экранов */
+@media (max-height: 600px) {
+    .report-card {
+        padding: 12px;
+        max-height: 95vh;
+    }
+    
+    .report-card-photo img {
+        max-height: 100px;
+    }
 }

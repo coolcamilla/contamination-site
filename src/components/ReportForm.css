@@ -10,15 +10,15 @@
     align-items: center;
     z-index: 1000;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    padding: clamp(10px, 2vh, 20px);
 }
 
 .report-modal {
     background: white;
-    border-radius: 16px;
-    padding: 40px;
-    width: 90%;
-    max-width: 480px;
-    max-height: 90vh;
+    border-radius: clamp(12px, 2vw, 16px);
+    padding: clamp(20px, 4vh, 40px);
+    width: min(95vw, 480px);
+    max-height: 92vh;
     overflow-y: auto;
     position: relative;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
@@ -26,16 +26,16 @@
 
 .report-modal-close {
     position: absolute;
-    top: 20px;
-    right: 24px;
+    top: clamp(12px, 2vh, 20px);
+    right: clamp(16px, 2vw, 24px);
     background: none;
     border: none;
-    font-size: 28px;
+    font-size: clamp(22px, 3.5vh, 28px);
     cursor: pointer;
     color: #b8d4c4;
     transition: all 0.2s ease;
-    width: 36px;
-    height: 36px;
+    width: clamp(28px, 4vh, 36px);
+    height: clamp(28px, 4vh, 36px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,35 +49,35 @@
 
 .report-modal h2 {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: clamp(4px, 1vh, 8px);
     color: #1a472a;
-    font-size: 28px;
+    font-size: clamp(20px, 3.5vh, 28px);
     font-weight: 700;
     text-align: center;
 }
 
 .report-coords {
     background: #fafdfb;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 13px;
+    padding: clamp(6px, 1.5vh, 10px) clamp(10px, 2vw, 14px);
+    border-radius: clamp(8px, 1.5vw, 10px);
+    font-size: clamp(11px, 2vh, 13px);
     font-family: 'SF Mono', Monaco, monospace;
-    margin-bottom: 28px;
+    margin-bottom: clamp(16px, 3vh, 28px);
     text-align: center;
     color: #5a7a68;
     border: 2px solid #e8f0eb;
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: clamp(12px, 2vh, 24px);
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: clamp(6px, 1.5vh, 10px);
     font-weight: 600;
     color: #2d5a3d;
-    font-size: 14px;
+    font-size: clamp(11px, 2vh, 14px);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -85,15 +85,15 @@
 .level-selector {
     display: flex;
     justify-content: space-around;
-    gap: 12px;
+    gap: clamp(8px, 2vw, 12px);
 }
 
 .level-btn {
-    width: 56px;
-    height: 56px;
+    width: clamp(40px, 7vh, 56px);
+    height: clamp(40px, 7vh, 56px);
     border-radius: 50%;
     border: 3px solid #e8f0eb;
-    font-size: 24px;
+    font-size: clamp(18px, 3.5vh, 24px);
     cursor: pointer;
     transition: all 0.3s ease;
     background: #fafdfb;
@@ -112,32 +112,32 @@
 
 .level-text {
     text-align: center;
-    margin-top: 14px;
+    margin-top: clamp(8px, 2vh, 14px);
     font-weight: 700;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vh, 15px);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .comment-input {
     width: 100%;
-    padding: 14px 16px;
+    padding: clamp(10px, 2vh, 14px) clamp(12px, 2vw, 16px);
     border: 2px solid #d4e6d9;
-    border-radius: 10px;
+    border-radius: clamp(8px, 1.5vw, 10px);
     font-family: inherit;
     resize: vertical;
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vh, 16px);
     transition: all 0.3s ease;
     background: #fafdfb;
     box-sizing: border-box;
-    min-height: 100px;
+    min-height: clamp(60px, 12vh, 100px);
 }
 
 .comment-input:focus {
     outline: none;
     border-color: #2d7a4f;
     background: white;
-    box-shadow: 0 0 0 4px rgba(45, 122, 79, 0.15);
+    box-shadow: 0 0 0 clamp(2px, 0.8vw, 4px) rgba(45, 122, 79, 0.15);
 }
 
 .comment-input::placeholder {
@@ -146,23 +146,27 @@
 
 .form-actions {
     display: flex;
-    gap: 16px;
-    margin-top: 28px;
+    gap: clamp(10px, 2vw, 16px);
+    margin-top: clamp(16px, 3vh, 28px);
 }
 
-.cancel-btn {
+.cancel-btn,
+.submit-btn {
     flex: 1;
-    padding: 16px;
-    background: #e8f0eb;
-    color: #2d5a3d;
+    padding: clamp(12px, 2.5vh, 16px);
     border: none;
-    border-radius: 10px;
+    border-radius: clamp(8px, 1.5vw, 10px);
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vh, 16px);
     font-weight: 600;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: clamp(0.5px, 0.1vw, 1px);
+}
+
+.cancel-btn {
+    background: #e8f0eb;
+    color: #2d5a3d;
 }
 
 .cancel-btn:hover {
@@ -171,18 +175,8 @@
 }
 
 .submit-btn {
-    flex: 1;
-    padding: 16px;
     background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
     color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
 }
 
@@ -204,12 +198,12 @@
 
 .upload-photo-btn {
     width: 100%;
-    padding: 10px;
+    padding: clamp(8px, 1.8vh, 10px);
     background: #f0f0f0;
     border: 1px dashed #ccc;
-    border-radius: 8px;
+    border-radius: clamp(6px, 1.5vw, 8px);
     cursor: pointer;
-    font-size: 14px;
+    font-size: clamp(12px, 2.2vh, 14px);
 }
 
 .upload-photo-btn:hover {
@@ -218,14 +212,14 @@
 
 .photo-preview {
     position: relative;
-    margin-top: 10px;
+    margin-top: clamp(8px, 2vh, 10px);
     display: inline-block;
 }
 
 .photo-preview img {
     max-width: 100%;
-    max-height: 150px;
-    border-radius: 8px;
+    max-height: clamp(100px, 20vh, 150px);
+    border-radius: clamp(6px, 1.5vw, 8px);
 }
 
 .remove-photo-btn {
@@ -236,8 +230,44 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: clamp(20px, 3.5vh, 24px);
+    height: clamp(20px, 3.5vh, 24px);
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(12px, 2.5vh, 16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Скроллбар */
+.report-modal::-webkit-scrollbar {
+    width: 4px;
+}
+
+.report-modal::-webkit-scrollbar-track {
+    background: #f0f4f1;
+    border-radius: 2px;
+}
+
+.report-modal::-webkit-scrollbar-thumb {
+    background: #b8d4c4;
+    border-radius: 2px;
+}
+
+/* Медиа-запрос для очень маленьких экранов */
+@media (max-height: 600px) {
+    .report-modal {
+        padding: 12px;
+        max-height: 95vh;
+    }
+    
+    .level-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+    
+    .comment-input {
+        min-height: 50px;
+    }
 }

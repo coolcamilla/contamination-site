@@ -4,45 +4,78 @@
     align-items: center;
     background: transparent;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    padding: 2vh 2vw;
+    min-height: 100%;
 }
 
 .auth-card {
     background: white;
-    padding: 40px;
-    border-radius: 16px;
+    padding: clamp(20px, 4vh, 40px);
+    border-radius: clamp(10px, 2vw, 16px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     width: 100%;
-    max-width: 420px;
+    max-width: min(90vw, 720px);        /* ← увеличено с 420px до 720px */
+    max-height: 92vh;
+    overflow-y: auto;
 }
 
 .auth-card h3 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: clamp(16px, 3vh, 30px);
     color: #1a472a;
-    font-size: 28px;
+    font-size: clamp(20px, 4vh, 28px);
     font-weight: 700;
 }
 
 .auth-card .mb-3 {
-    margin-bottom: 20px;
+    margin-bottom: clamp(12px, 2vh, 20px);
 }
 
 .auth-card label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: clamp(4px, 1vh, 8px);
     font-weight: 600;
     color: #2d5a3d;
-    font-size: 14px;
+    font-size: clamp(11px, 1.8vh, 14px);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
+/* === 2 КОЛОНКИ === */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(10px, 1.5vw, 16px);
+    margin-bottom: clamp(12px, 2vh, 20px);
+}
+
+.form-col {
+    flex: 1 1 0;
+    min-width: 0;   /* чтобы flex-элементы не вылезали за родителя */
+}
+
+/* На узких экранах — снова одна колонка */
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .form-col {
+        flex: 1 1 100%;
+        margin-bottom: clamp(12px, 2vh, 16px);
+    }
+    .form-col:last-child {
+        margin-bottom: 0;
+    }
+}
+/* ================= */
+
 .auth-card .form-control {
     width: 100%;
-    padding: 14px 16px;
+    padding: clamp(10px, 2vh, 14px) clamp(12px, 2vw, 16px);
     border: 2px solid #d4e6d9;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: clamp(8px, 1.5vw, 10px);
+    font-size: clamp(14px, 2.2vh, 16px);
     transition: all 0.3s ease;
     background: #fafdfb;
     box-sizing: border-box;
@@ -52,7 +85,7 @@
     outline: none;
     border-color: #2d7a4f;
     background: white;
-    box-shadow: 0 0 0 4px rgba(45, 122, 79, 0.15);
+    box-shadow: 0 0 0 clamp(2px, 0.8vw, 4px) rgba(45, 122, 79, 0.15);
 }
 
 .auth-card .form-control::placeholder {
@@ -61,16 +94,16 @@
 
 .auth-card .btn-submit {
     width: 100%;
-    padding: 16px;
+    padding: clamp(12px, 2.5vh, 16px);
     background: linear-gradient(135deg, #2d7a4f 0%, #1a472a 100%);
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: clamp(8px, 1.5vw, 10px);
+    font-size: clamp(14px, 2.2vh, 16px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 12px;
+    margin-top: clamp(8px, 2vh, 12px);
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(45, 122, 79, 0.3);
@@ -87,15 +120,15 @@
 
 .auth-toggle {
     text-align: center;
-    margin-top: 28px;
-    padding-top: 20px;
+    margin-top: clamp(16px, 3vh, 28px);
+    padding-top: clamp(12px, 2vh, 20px);
     border-top: 2px solid #e8f0eb;
 }
 
 .auth-toggle p {
     margin: 0;
     color: #5a7a68;
-    font-size: 15px;
+    font-size: clamp(13px, 2vh, 15px);
 }
 
 .auth-toggle button {
@@ -103,7 +136,7 @@
     border: none;
     color: #2d7a4f;
     cursor: pointer;
-    font-size: 15px;
+    font-size: clamp(13px, 2vh, 15px);
     font-weight: 600;
     text-decoration: none;
     padding: 0;
@@ -115,20 +148,21 @@
     text-decoration: underline;
 }
 
+/* Роль-селектор */
 .role-selector {
     display: flex;
-    gap: 10px;
+    gap: clamp(6px, 1.5vw, 10px);
     margin-top: 6px;
 }
 
 .role-btn {
     flex: 1;
-    padding: 12px;
+    padding: clamp(8px, 2vh, 12px);
     border: 2px solid #d4e6d9;
-    border-radius: 10px;
+    border-radius: clamp(8px, 1.5vw, 10px);
     background: #fafdfb;
     color: #5a7a68;
-    font-size: 14px;
+    font-size: clamp(12px, 2vh, 14px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -145,9 +179,43 @@
     color: #1a472a;
 }
 
+/* Подсказка */
 .form-hint {
     display: block;
-    margin-top: 6px;
-    font-size: 12px;
+    margin-top: clamp(4px, 1vh, 6px);
+    font-size: clamp(10px, 1.8vh, 12px);
     color: #5a7a68;
+}
+
+/* Скроллбар */
+.auth-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-card::-webkit-scrollbar-track {
+    background: #f0f4f1;
+    border-radius: 3px;
+}
+
+.auth-card::-webkit-scrollbar-thumb {
+    background: #b8d4c4;
+    border-radius: 3px;
+}
+
+/* Медиа-запрос для очень маленьких экранов */
+@media (max-height: 600px) {
+    .auth-card {
+        padding: 16px;
+        max-height: 95vh;
+    }
+    
+    .auth-card h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .role-btn {
+        padding: 8px;
+        font-size: 12px;
+    }
 }
