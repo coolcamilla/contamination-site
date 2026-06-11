@@ -45,7 +45,6 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
         setMenuOpen(true);
     };
 
-    // Разное меню для пользователя и компании
     const dropdownContent = (
         <div
             className="user-dropdown"
@@ -81,12 +80,36 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
     return (
         <header className="header">
             <div className="header-logo" onClick={() => onNavigate('map')} style={{ cursor: 'pointer' }}>
-                <h1>ЭКО Патруль NN</h1>
+                {/* Замените /logo.png на путь к вашему логотипу */}
+                <img 
+                    src="/logo.jpg" 
+                    alt="ЭкоПатруль НН" 
+                    className="header-logo-img"
+                    onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                    }}
+                />
+                <span className="header-logo-fallback" style={{ display: 'none' }}>
+                    ЭкоПатруль НН
+                </span>
             </div>
 
             <nav className="header-nav">
-                <a href="/schedule" className="nav-link">График вывоза мусора</a>
-                <a href="/contacts" className="nav-link">Контакты</a>
+                <span 
+                    className="nav-link" 
+                    onClick={() => onNavigate('schedule')}
+                    style={{ cursor: 'pointer' }}
+                >
+                    График вывоза мусора
+                </span>
+                <span 
+                    className="nav-link" 
+                    onClick={() => onNavigate('contacts')}
+                    style={{ cursor: 'pointer' }}
+                >
+                    Контакты
+                </span>
             </nav>
 
             <div className="header-auth">

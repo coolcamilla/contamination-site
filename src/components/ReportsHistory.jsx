@@ -16,21 +16,21 @@ const STATUS_MAP = {
 function ReportDetailModal({ report, onClose, isCompany, onStatusChange }) {
     const level = getLevelInfo(report.trashLevel);
     const status = STATUS_MAP[report.status] || STATUS_MAP.pending;
+    const [responseText, setResponseText] = useState("");
+    const [showRejectForm, setShowRejectForm] = useState(false);
 
     const handleApprove = async () => {
         try {
             const reportRef = doc(db, "reports", report.id);
             const userRef = doc(db, "Users", report.userId);
 
-            // Одобряем заявку
-            await updateDoc(reportRef, { status: "approved" });
-
-            // Начисляем 10 коинов пользователю
-            await updateDoc(userRef, {
-                points: increment(10)
+            await updateDoc(reportRef, { 
+                status: "approved",
+                response: responseText.trim() || report.response || null
             });
 
-            // Сохраняем в историю
+            await updateDoc(userRef, { points: increment(10) });
+
             await addDoc(collection(db, "ecoCoinsHistory"), {
                 userId: report.userId,
                 amount: 10,
@@ -49,8 +49,16 @@ function ReportDetailModal({ report, onClose, isCompany, onStatusChange }) {
     };
 
     const handleReject = async () => {
+        if (!responseText.trim()) {
+            toast.error("Укажите причину отклонения", { position: "top-center" });
+            return;
+        }
+
         try {
-            await updateDoc(doc(db, "reports", report.id), { status: "rejected" });
+            await updateDoc(doc(db, "reports", report.id), { 
+                status: "rejected",
+                response: responseText.trim()
+            });
             toast.info("Заявка отклонена", { position: "top-center" });
             onStatusChange();
             onClose();
@@ -91,21 +99,60 @@ function ReportDetailModal({ report, onClose, isCompany, onStatusChange }) {
 
                 {report.comment && (
                     <div className="rh-modal-comment">
-                        <label>Комментарий</label>
+                        <label>Комментарий пользователя</label>
                         <p>{report.comment}</p>
+                    </div>
+                )}
+
+                {/* Ответ компании: не показываем если пустой; красный фон для отклонённых */}
+                {report.response?.trim() && (
+                    <div 
+                        className="rh-modal-comment" 
+                    >
+                        <label style={{ color: report.status === "rejected" ? "#c44" : "#1a472a" }}>
+                            Ответ компании
+                        </label>
+                        <p>{report.response}</p>
                     </div>
                 )}
 
                 {/* Кнопки для компании */}
                 {isCompany && report.status === "pending" && (
-                    <div className="rh-modal-actions">
-                        <button className="rh-btn rh-btn--reject" onClick={handleReject}>
-                            ❌ Отклонить
-                        </button>
-                        <button className="rh-btn rh-btn--approve" onClick={handleApprove}>
-                            ✓ Одобрить
-                        </button>
-                    </div>
+                    <>
+                        {!showRejectForm ? (
+                            <div className="rh-modal-actions">
+                                <button className="rh-btn rh-btn--reject" onClick={() => setShowRejectForm(true)}>
+                                    ❌ Отклонить
+                                </button>
+                                <button className="rh-btn rh-btn--approve" onClick={handleApprove}>
+                                    ✓ Одобрить
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="rh-modal-reject-form">
+                                <label>Причина отклонения *</label>
+                                <textarea
+                                    value={responseText}
+                                    onChange={(e) => setResponseText(e.target.value)}
+                                    placeholder="Укажите причину отклонения..."
+                                    rows={4}
+                                    className="rh-modal-textarea"
+                                    autoFocus
+                                />
+                                <div className="rh-modal-actions">
+                                    <button className="rh-btn rh-btn--secondary" onClick={() => {
+                                        setShowRejectForm(false);
+                                        setResponseText("");
+                                    }}>
+                                        Отмена
+                                    </button>
+                                    <button className="rh-btn rh-btn--reject" onClick={handleReject}>
+                                        Подтвердить отклонение
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

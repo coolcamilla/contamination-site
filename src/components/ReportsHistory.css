@@ -304,3 +304,40 @@
         max-height: 90vh;
     }
 }
+
+.rh-modal-reject-form {
+    margin-top: 16px;
+}
+
+.rh-modal-reject-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #c44;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rh-modal-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #f0d0d0;
+    border-radius: 10px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+    background: #fff8f8;
+    box-sizing: border-box;
+}
+
+.rh-modal-textarea:focus {
+    outline: none;
+    border-color: #c44;
+    background: white;
+}
+
+.rh-btn--secondary {
+    background: #f4faf6;
+    color: #5a7a68;
+    border: 2px solid #d4e6d9;
+}

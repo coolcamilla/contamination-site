@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 
 function SignIn({onSuccess}) {
     const [email, setEmail] = useState("");
@@ -12,10 +12,18 @@ function SignIn({onSuccess}) {
         e.preventDefault();
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            
-            toast.success("Вход успешно выполнен!", {
-                position: "top-center"
-            });
+            const user = userCredential.user;
+
+            if (!user.emailVerified) {
+                toast.warning("Ваш email не подтверждён. Проверьте почту или отправьте письмо повторно", {
+                    position: "top-center",
+                    autoClose: 6000
+                });
+            } else {
+                toast.success("Вход успешно выполнен!", {
+                    position: "top-center"
+                });
+            }
 
             setEmail("");
             setPassword("");
@@ -27,8 +35,6 @@ function SignIn({onSuccess}) {
         } catch (error) {
             let errorMessage = "Не удалось войти в аккаунт";
             
-            // Firebase объединяет ошибки user-not-found и wrong-password в invalid-credential
-            // из соображений безопасности, чтобы не раскрывать существование email
             if (error.code === 'auth/invalid-credential' || 
                 error.code === 'auth/user-not-found' || 
                 error.code === 'auth/wrong-password') {
@@ -47,6 +53,29 @@ function SignIn({onSuccess}) {
                 position: "top-center",
                 autoClose: 5000
             });
+        }
+    };
+
+    const handleForgotPassword = async () => {
+        if (!email.trim()) {
+            toast.warning("Введите email для восстановления пароля", { position: "top-center" });
+            return;
+        }
+        try {
+            await sendPasswordResetEmail(auth, email.trim());
+            toast.success("Письмо для сброса пароля отправлено на " + email, { position: "top-center" });
+        } catch (error) {
+            let errorMessage = "Не удалось отправить письмо";
+            if (error.code === 'auth/invalid-email') {
+                errorMessage = "Некорректный формат email";
+            } else if (error.code === 'auth/user-not-found') {
+                errorMessage = "Пользователь с таким email не найден";
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = "Ошибка сети. Проверьте подключение к интернету";
+            } else {
+                errorMessage = error.message || "Произошла ошибка";
+            }
+            toast.error(errorMessage, { position: "top-center", autoClose: 5000 });
         }
     };
 
@@ -76,6 +105,15 @@ function SignIn({onSuccess}) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
+                <div className="forgot-password-wrapper">
+                    <button 
+                        type="button" 
+                        className="btn-link" 
+                        onClick={handleForgotPassword}
+                    >
+                        Забыли пароль?
+                    </button>
+                </div>
             </div>
 
             <button type="submit" className="btn-submit">

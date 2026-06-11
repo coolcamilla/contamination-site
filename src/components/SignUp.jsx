@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
 import { setDoc, doc, getDoc, increment, addDoc, serverTimestamp, collection } from "firebase/firestore";
@@ -26,6 +26,7 @@ function SignUp({ onSuccess }) {
             const displayName = isCompany ? companyName : `${firstName} ${lastName}`;
 
             await updateProfile(user, { displayName });
+            await sendEmailVerification(user); // ← отправка письма подтверждения
 
             const userData = {
                 uid: user.uid,
@@ -63,12 +64,12 @@ function SignUp({ onSuccess }) {
                         createdAt: serverTimestamp()
                     });
 
-                    toast.success("Регистрация успешна! Друг получил 20 коинов", { position: "top-center" });
+                    toast.success("Регистрация успешна! Друг получил 20 коинов. Подтвердите email по ссылке в письме", { position: "top-center" });
                 } else {
-                    toast.warning("Регистрация успешна, но ID друга не найден", { position: "top-center" });
+                    toast.warning("Регистрация успешна, но ID друга не найден. Подтвердите email по ссылке в письме", { position: "top-center" });
                 }
             } else {
-                toast.success("Регистрация успешна!", { position: "top-center" });
+                toast.success("Регистрация успешна! Подтвердите email по ссылке в письме", { position: "top-center" });
             }
 
             setEmail("");
