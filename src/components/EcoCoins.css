@@ -1,9 +1,7 @@
-/* ===== СТРАНИЦА ===== */
 .ec-page {
     width: 100%;
 }
 
-/* ===== СЕКЦИИ ===== */
 .ec-section {
     min-height: clamp(400px, 80vh, 600px);
     display: flex;
@@ -12,7 +10,6 @@
     padding: clamp(20px, 4vh, 40px) clamp(12px, 2vw, 20px);
 }
 
-/* Белая секция: фиксированная высота 600px, история скроллится внутри */
 .ec-section--white {
     height: 600px;
     min-height: 600px;
@@ -28,13 +25,11 @@
     overflow: hidden;
 }
 
-/* Баланс и заголовок не сжимаются */
 .ec-section--white .ec-balance-card,
 .ec-section--white .ec-title {
     flex-shrink: 0;
 }
 
-/* История и пустое состояние занимают оставшееся место и скроллятся */
 .ec-section--white .ec-history-list,
 .ec-section--white .ec-empty {
     flex: 1 1 auto;
@@ -42,7 +37,6 @@
     min-height: 0;
 }
 
-/* Скроллбар для истории */
 .ec-section--white .ec-history-list::-webkit-scrollbar,
 .ec-section--white .ec-empty::-webkit-scrollbar {
     width: 6px;

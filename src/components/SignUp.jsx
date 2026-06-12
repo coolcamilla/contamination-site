@@ -26,7 +26,7 @@ function SignUp({ onSuccess }) {
             const displayName = isCompany ? companyName : `${firstName} ${lastName}`;
 
             await updateProfile(user, { displayName });
-            await sendEmailVerification(user); // ← отправка письма подтверждения
+            await sendEmailVerification(user);
 
             const userData = {
                 uid: user.uid,
@@ -120,12 +120,11 @@ function SignUp({ onSuccess }) {
                         className={`role-btn ${role === ROLES.COMPANY ? "active" : ""}`}
                         onClick={() => setRole(ROLES.COMPANY)}
                     >
-                        🏢 Управляющая компания
+                        🏢 Региональный оператор
                     </button>
                 </div>
             </div>
 
-            {/* Поля для пользователя */}
             {role === ROLES.USER && (
                 <>
                     <div className="form-row">

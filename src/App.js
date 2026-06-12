@@ -10,6 +10,7 @@ import UserProfile from './components/UserProfile';
 import EcoCoins from './components/EcoCoins';
 import Contacts from './components/Contacts';
 import Schedule from './components/Schedule';
+import Partners from './components/Partners';
 import { doc, getDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -85,7 +86,7 @@ function App() {
             <Map user={user} userData={userData} onRequireAuth={handleRequireAuth} />
 
             {/* Секция "О проекте" — только на главной */}
-            <section className="about-section">
+            <section className="about-section" id="about-section">
               <div className="about-content">
                 <h2>О проекте</h2>
                 <p className="about-lead">
@@ -148,6 +149,7 @@ function App() {
         {currentView === 'ecoCoins' && <EcoCoins />}
         {currentView === 'contacts' && <Contacts />}
         {currentView === 'schedule' && <Schedule />}
+        {currentView === 'partners' && <Partners />}
       </main>
 
       {showAuthModal && (

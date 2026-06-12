@@ -45,6 +45,16 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
         setMenuOpen(true);
     };
 
+    const scrollToAbout = () => {
+        onNavigate('map');
+        setTimeout(() => {
+            const aboutSection = document.getElementById('about-section');
+            if (aboutSection) {
+                aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+    };
+
     const dropdownContent = (
         <div
             className="user-dropdown"
@@ -80,7 +90,6 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
     return (
         <header className="header">
             <div className="header-logo" onClick={() => onNavigate('map')} style={{ cursor: 'pointer' }}>
-                {/* Замените /logo.png на путь к вашему логотипу */}
                 <img 
                     src="/logo.jpg" 
                     alt="ЭкоПатруль НН" 
@@ -90,12 +99,27 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
                         e.target.nextSibling.style.display = 'flex';
                     }}
                 />
+                <span className="header-logo-text">ЭкоПатруль НН</span>
                 <span className="header-logo-fallback" style={{ display: 'none' }}>
                     ЭкоПатруль НН
                 </span>
             </div>
 
             <nav className="header-nav">
+                <span 
+                    className="nav-link" 
+                    onClick={scrollToAbout}
+                    style={{ cursor: 'pointer' }}
+                >
+                    О проекте
+                </span>
+                <span 
+                    className="nav-link" 
+                    onClick={() => onNavigate('partners')}
+                    style={{ cursor: 'pointer' }}
+                >
+                    Наши партнёры
+                </span>
                 <span 
                     className="nav-link" 
                     onClick={() => onNavigate('schedule')}
