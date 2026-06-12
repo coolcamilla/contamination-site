@@ -52,6 +52,9 @@
     gap: clamp(16px, 3vw, 40px);
     margin-left: auto;
     margin-right: clamp(16px, 2vw, 30px);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 60%;
 }
 
 .nav-link {
@@ -184,19 +187,14 @@
 
 /* Медиа-запрос для мобильных */
 @media (max-width: 768px) {
-    .header-nav {
-        gap: 12px;
-        margin-right: 12px;
+    .header {
+        flex-wrap: wrap;
+        gap: 8px 0;
+        padding: 10px 16px;
     }
 
-    .nav-link {
-        font-size: 12px;
-        letter-spacing: 0.3px;
-    }
-
-    .login-btn {
-        padding: 8px 16px;
-        font-size: 12px;
+    .header-logo {
+        gap: 8px;
     }
 
     .header-logo-img {
@@ -210,5 +208,45 @@
 
     .header-logo-fallback {
         font-size: 18px;
+    }
+
+    .header-nav {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        gap: 8px 16px;
+        justify-content: center;
+        padding-top: 4px;
+        border-top: 1px solid #e8f0eb;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        letter-spacing: 0.3px;
+    }
+
+    .header-auth {
+        order: 2;
+    }
+
+    .login-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-nav {
+        gap: 6px 12px;
+    }
+
+    .nav-link {
+        font-size: 11px;
+    }
+
+    .login-btn {
+        padding: 6px 12px;
+        font-size: 11px;
     }
 }

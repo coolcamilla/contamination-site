@@ -93,7 +93,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
                 status: "pending"
             });
 
-            toast.success("Отметка добавлена!", {position: "top-center"});
+            toast.success("Заяка отправлена!", {position: "top-center"});
 
             if (onSuccess) onSuccess();
             onClose();
