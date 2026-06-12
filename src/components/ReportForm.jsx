@@ -66,6 +66,16 @@ function ReportForm({ coords, onClose, onSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // ФОТО ОБЯЗАТЕЛЬНО
+        if (!photoUrl) {
+            toast.error("Прикрепите фото для создания заявки", {
+                position: "top-center",
+                autoClose: 4000,
+            });
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -77,7 +87,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
                 },
                 address: address || null,
                 trashLevel: trashLevel,
-                comment: comment,
+                comment: comment.trim() || null, // необязательный — сохраняем null если пусто
                 photoUrl: photoUrl,
                 createdAt: new Date(),
                 status: "pending"
@@ -163,7 +173,9 @@ function ReportForm({ coords, onClose, onSuccess }) {
                     </div>
 
                     <div className="form-group">
-                        <label>Комментарий</label>
+                        <label>
+                            Комментарий
+                        </label>
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
@@ -174,7 +186,9 @@ function ReportForm({ coords, onClose, onSuccess }) {
                     </div>
 
                     <div className="form-group">
-                        <label>Фото</label>
+                        <label>
+                            Фото <span className="required-hint">*</span>
+                        </label>
                         <button
                             type="button"
                             onClick={showCloudinaryWidget}

@@ -38,7 +38,7 @@ function EcoCoins() {
 
     return (
         <div className="ec-page">
-            {/* Секция 1: История — белый фон, полный экран */}
+            {/* Секция 1: История — белый фон, фиксированная высота */}
             <section className="ec-section ec-section--white">
                 <div className="ec-content">
                     <div className="ec-balance-card">
@@ -78,10 +78,16 @@ function EcoCoins() {
                 </div>
             </section>
 
-            {/* Секция 2: Магазины — зелёный фон, полный экран */}
+            {/* Секция 2: Магазины — зелёный фон */}
             <section className="ec-section ec-section--green">
                 <div className="ec-content">
-                    <h2 className="ec-title ec-title--light">Где обменять</h2>
+                    <h2 className="ec-title ec-title--light">Наши партнёры</h2>
+                    
+                    <div className="ec-partners-intro">
+                        <p>
+                            Мы гордимся тем, что проект «ЭкоПатруль НН» поддерживает социально ответственный бизнес Нижнего Новгорода. Наша партнерская сеть — это места, где забота о себе и планете стоит на первом месте. Именно здесь ваши экокоины превращаются в реальные скидки и приятные бонусы!
+                        </p>
+                    </div>
 
                     {stores.length === 0 ? (
                         <div className="ec-empty ec-empty--light">
@@ -107,6 +113,15 @@ function EcoCoins() {
                                     </div>
                                     <div className="ec-store-info">
                                         <h3>{store.name}</h3>
+                                        {store.description && (
+                                            <p className="ec-store-desc">{store.description}</p>
+                                        )}
+                                        {store.bonus && (
+                                            <div className="ec-store-bonus">
+                                                <span className="ec-bonus-icon">🎁</span>
+                                                <span>{store.bonus}</span>
+                                            </div>
+                                        )}
                                         <span className="ec-store-link">Перейти →</span>
                                     </div>
                                 </a>

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
 import { setDoc, doc, getDoc, increment, addDoc, serverTimestamp, collection } from "firebase/firestore";
@@ -26,6 +26,7 @@ function SignUp({ onSuccess }) {
             const displayName = isCompany ? companyName : `${firstName} ${lastName}`;
 
             await updateProfile(user, { displayName });
+            await sendEmailVerification(user);
 
             const userData = {
                 uid: user.uid,
@@ -63,12 +64,12 @@ function SignUp({ onSuccess }) {
                         createdAt: serverTimestamp()
                     });
 
-                    toast.success("Регистрация успешна! Друг получил 20 коинов", { position: "top-center" });
+                    toast.success("Регистрация успешна! Друг получил 20 коинов. Подтвердите email по ссылке в письме", { position: "top-center" });
                 } else {
-                    toast.warning("Регистрация успешна, но ID друга не найден", { position: "top-center" });
+                    toast.warning("Регистрация успешна, но ID друга не найден. Подтвердите email по ссылке в письме", { position: "top-center" });
                 }
             } else {
-                toast.success("Регистрация успешна!", { position: "top-center" });
+                toast.success("Регистрация успешна! Подтвердите email по ссылке в письме", { position: "top-center" });
             }
 
             setEmail("");
@@ -119,12 +120,11 @@ function SignUp({ onSuccess }) {
                         className={`role-btn ${role === ROLES.COMPANY ? "active" : ""}`}
                         onClick={() => setRole(ROLES.COMPANY)}
                     >
-                        🏢 Управляющая компания
+                        🏢 Региональный оператор
                     </button>
                 </div>
             </div>
 
-            {/* Поля для пользователя */}
             {role === ROLES.USER && (
                 <>
                     <div className="form-row">

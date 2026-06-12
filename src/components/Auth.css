@@ -202,6 +202,27 @@
     border-radius: 3px;
 }
 
+.forgot-password-wrapper {
+    text-align: right;
+    margin-top: clamp(4px, 1vh, 6px);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #2d7a4f;
+    font-size: clamp(12px, 2vh, 13px);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.btn-link:hover {
+    color: #1a472a;
+}
+
 /* Медиа-запрос для очень маленьких экранов */
 @media (max-height: 600px) {
     .auth-card {
