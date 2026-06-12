@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { auth, db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { toast } from "react-toastify";
 import "./ReportForm.css";
 import { getLevelInfo } from '../constants/levels';
+
+const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
 
 function ReportForm({ coords, onClose, onSuccess }) {
     const [trashLevel, setTrashLevel] = useState(3);
@@ -11,7 +14,8 @@ function ReportForm({ coords, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
     const [photoUrl, setPhotoUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
-    
+    const fileInputRef = useRef(null);
+
     const [address, setAddress] = useState("");
     const [addressLoading, setAddressLoading] = useState(false);
 
@@ -64,10 +68,85 @@ function ReportForm({ coords, onClose, onSuccess }) {
         fetchAddress();
     }, [coords]);
 
+    // Прямая загрузка в Cloudinary через fetch
+    const uploadToCloudinary = async (file) => {
+        if (!CLOUD_NAME || !UPLOAD_PRESET) {
+            toast.error("Ошибка конфигурации Cloudinary. Проверьте .env файл", {
+                position: "top-center",
+                autoClose: 5000,
+            });
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || "Ошибка загрузки");
+            }
+
+            const data = await response.json();
+            return data.secure_url;
+        } catch (error) {
+            console.error("Ошибка загрузки в Cloudinary:", error);
+            toast.error(`Ошибка загрузки: ${error.message}`, {
+                position: "top-center",
+                autoClose: 4000,
+            });
+            return null;
+        }
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Проверка формата
+        const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Допустимые форматы: JPG, PNG, WebP", {
+                position: "top-center",
+                autoClose: 4000,
+            });
+            return;
+        }
+
+        // Проверка размера (макс 10 МБ)
+        if (file.size > 10 * 1024 * 1024) {
+            toast.error("Файл слишком большой (макс 10 МБ)", {
+                position: "top-center",
+                autoClose: 4000,
+            });
+            return;
+        }
+
+        setIsUploading(true);
+        const url = await uploadToCloudinary(file);
+        setIsUploading(false);
+
+        if (url) {
+            setPhotoUrl(url);
+            toast.success("Фото загружено!", { position: "top-center" });
+        }
+
+        // Сброс input, чтобы можно было выбрать тот же файл повторно
+        e.target.value = "";
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // ФОТО ОБЯЗАТЕЛЬНО
         if (!photoUrl) {
             toast.error("Прикрепите фото для создания заявки", {
                 position: "top-center",
@@ -87,53 +166,22 @@ function ReportForm({ coords, onClose, onSuccess }) {
                 },
                 address: address || null,
                 trashLevel: trashLevel,
-                comment: comment.trim() || null, // необязательный — сохраняем null если пусто
+                comment: comment.trim() || null,
                 photoUrl: photoUrl,
                 createdAt: new Date(),
                 status: "pending"
             });
 
-            toast.success("Заяка отправлена!", {position: "top-center"});
+            toast.success("Заявка отправлена!", { position: "top-center" });
 
             if (onSuccess) onSuccess();
             onClose();
         } catch (error) {
             console.error("Ошибка: ", error);
-            toast.error("Ошибка при добавлении", { position: "bottom-center"});
+            toast.error("Ошибка при добавлении", { position: "bottom-center" });
         } finally {
             setLoading(false);
         }
-    };
-
-    const showCloudinaryWidget = () => {
-        if (!window.cloudinary) {
-            toast.error("Ошибка загрузки виджета");
-            return;
-        }
-
-        setIsUploading(true);
-        const uploadWidget = window.cloudinary.createUploadWidget(
-            {
-                cloudName: process.env.REACT_APP_CLOUDINARY_CLOUD_NAME,
-                uploadPreset: process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET,
-                sources: ['local', 'camera'],
-                multiple: false,
-                maxFiles: 1,
-                clientAllowedFormats: ["image/jpeg", "image/png", "image/webp"]
-            },
-            (error, result) => {
-                setIsUploading(false);
-                if (error) {
-                    toast.error("Ошибка загрузки фото");
-                    return;
-                }
-                if (result.event === 'success') {
-                    setPhotoUrl(result.info.secure_url);
-                    toast.success("Фото загружено!");
-                }
-            }
-        );
-        uploadWidget.open();
     };
 
     const levelInfo = getLevelInfo(trashLevel);
@@ -143,7 +191,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
             <div className="report-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="report-modal-close" onClick={onClose}>×</button>
                 <h2>Сообщить о загрязнении</h2>
-                
+
                 <p className="report-coords">
                     📍 {addressLoading 
                         ? "Определение адреса..." 
@@ -173,9 +221,7 @@ function ReportForm({ coords, onClose, onSuccess }) {
                     </div>
 
                     <div className="form-group">
-                        <label>
-                            Комментарий
-                        </label>
+                        <label>Комментарий</label>
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
@@ -189,15 +235,25 @@ function ReportForm({ coords, onClose, onSuccess }) {
                         <label>
                             Фото <span className="required-hint">*</span>
                         </label>
+
+                        {/* Скрытый нативный input для загрузки */}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            accept="image/jpeg,image/png,image/webp"
+                            style={{ display: "none" }}
+                        />
+
                         <button
                             type="button"
-                            onClick={showCloudinaryWidget}
+                            onClick={() => fileInputRef.current?.click()}
                             disabled={isUploading}
                             className="upload-photo-btn"
                         >
                             {isUploading ? "Загрузка..." : (photoUrl ? "Изменить фото" : "Выбрать фото")}
                         </button>
-                        
+
                         {photoUrl && (
                             <div className="photo-preview">
                                 <img src={photoUrl} alt="Загруженное фото" />
