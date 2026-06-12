@@ -55,6 +55,9 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
         }, 100);
     };
 
+    // Путь к логотипу с учётом PUBLIC_URL (для GitHub Pages)
+    const logoPath = process.env.PUBLIC_URL ? process.env.PUBLIC_URL + '/logo.jpg' : '/logo.jpg';
+
     const dropdownContent = (
         <div
             className="user-dropdown"
@@ -91,7 +94,7 @@ function Header({ user, userData, onLoginClick, onNavigate }) {
         <header className="header">
             <div className="header-logo" onClick={() => onNavigate('map')} style={{ cursor: 'pointer' }}>
                 <img 
-                    src="/logo.jpg" 
+                    src={logoPath} 
                     alt="ЭкоПатруль НН" 
                     className="header-logo-img"
                     onError={(e) => {
