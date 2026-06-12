@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/contamination-site/static/css/main.72ea9d19.css",
+    "main.js": "/contamination-site/static/js/main.40884506.js",
+    "static/js/453.181562d0.chunk.js": "/contamination-site/static/js/453.181562d0.chunk.js",
+    "index.html": "/contamination-site/index.html",
+    "main.72ea9d19.css.map": "/contamination-site/static/css/main.72ea9d19.css.map",
+    "main.40884506.js.map": "/contamination-site/static/js/main.40884506.js.map",
+    "453.181562d0.chunk.js.map": "/contamination-site/static/js/453.181562d0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.72ea9d19.css",
+    "static/js/main.40884506.js"
+  ]
+}
