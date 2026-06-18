@@ -43,7 +43,7 @@ function Schedule() {
                                 </div>
                                 <div className="mode-divider" />
                                 <div className="mode-frequency">
-                                    <span className="mode-number">3</span>
+                                    <span className="mode-number">1</span>
                                     <div className="mode-desc">
                                         <span className="mode-period">раза в 3 дня</span>
                                         <span className="mode-condition">
