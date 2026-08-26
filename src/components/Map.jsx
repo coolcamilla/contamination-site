@@ -55,7 +55,6 @@ function MapClickHandler({ onClick }) {
     return null;
 }
 
-// Модалка для компании с кнопкой "Выполнить"
 function CompanyReportModal({ report, onClose, onComplete }) {
     const level = getLevelInfo(report.trashLevel);
 
@@ -126,7 +125,6 @@ function Map({ user, userData, onRequireAuth }) {
 
     const isCompany = userData?.role === "company";
 
-    // Компания видит одобренные, пользователь — одобренные (для просмотра)
     useEffect(() => {
         const q = query(
             collection(db, "reports"),
@@ -144,7 +142,6 @@ function Map({ user, userData, onRequireAuth }) {
         return () => unsubscribe();
     }, []);
 
-    // Загрузка контейнеров
     useEffect(() => {
         const fetchContainers = async () => {
             const queryStr = `
@@ -202,8 +199,8 @@ function Map({ user, userData, onRequireAuth }) {
                 style={{height: '500px', width: '80%'}} 
                 className='map'>
                 <TileLayer 
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <MapPanes />
                 <MapBound />
@@ -236,21 +233,18 @@ function Map({ user, userData, onRequireAuth }) {
                 ))}
             </MapContainer>
 
-            {/* Форма создания заявки — только для пользователей */}
             {showForm && selectedCoords && !isCompany && (
                 <ReportForm coords={selectedCoords} onClose={handleFormClose} onSuccess={handleFormSuccess} />
             )}
 
-            {/* Модалка для компании */}
             {selectedReport && isCompany && (
                 <CompanyReportModal
                     report={selectedReport}
                     onClose={() => setSelectedReport(null)}
-                    onComplete={() => { /* метка пропадёт автоматически через onSnapshot */ }}
+                    onComplete={() => {}}
                 />
             )}
 
-            {/* Обычная карточка для пользователей */}
             {selectedReport && !isCompany && (
                 <ReportCard report={selectedReport} onClose={() => setSelectedReport(null)} />
             )}
